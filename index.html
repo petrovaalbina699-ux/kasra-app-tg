@@ -156,6 +156,23 @@ textarea.field-input { resize: none; line-height: 1.5; }
 .mini-input:focus { border-color: #F5C518; }
 .mini-input::placeholder { color: #4A8860; }
 
+
+/* ── ACCORDION GROUPS ── */
+.acc-group { margin-bottom: 8px; }
+.acc-group-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: #1B4D2E; border: 0.5px solid #3A7A4E;
+  border-radius: 12px; cursor: pointer; margin-bottom: 0;
+}
+.acc-group-head.open { border-radius: 12px 12px 0 0; border-bottom-color: transparent; }
+.acc-group-title { font-size: 13px; font-weight: 600; color: #F5C518; }
+.acc-arrow { font-size: 18px; color: #7AB893; transition: transform 0.2s; display: inline-block; }
+.acc-arrow.open { transform: rotate(90deg); color: #F5C518; }
+.acc-group-body { display: none; padding: 8px; background: #1a4a2a; border: 0.5px solid #3A7A4E; border-top: none; border-radius: 0 0 12px 12px; }
+.acc-group-body.open { display: block; }
+.acc-group-body .item-row { margin-bottom: 6px; }
+.acc-group-body .item-row:last-child { margin-bottom: 0; }
+
 /* ── SALARY ── */
 .salary-item {
   background: #245E37; border: 0.5px solid #3A7A4E;
@@ -397,187 +414,238 @@ textarea.field-input { resize: none; line-height: 1.5; }
   <!-- ПОСТАВЩИКИ -->
   <div id="exp-suppliers" class="exp-section active">
     <div class="sec-label">ВЫБЕРИТЕ ПОСТАВЩИКОВ И СУММЫ</div>
-    <div id="sup-list">
-      <div class="item-row" id="sup-1">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-1')"></div>
-          <span class="item-name">Рынок/Закуп</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
+
+    <!-- ПРОДУКТЫ -->
+    <div class="acc-group">
+      <div class="acc-group-head" onclick="toggleAcc('acc-food')">
+        <span class="acc-group-title">🥩 Продукты</span>
+        <span class="acc-arrow" id="arr-acc-food">›</span>
+      </div>
+      <div class="acc-group-body" id="acc-food">
+        <div class="item-row" id="sup-f1"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f1')"></div><span class="item-name">Рынок (Беркат)</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-f2"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f2')"></div><span class="item-name">Филе</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-f3"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f3')"></div><span class="item-name">Фарш</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-f4"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f4')"></div><span class="item-name">Океан</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-f5"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f5')"></div><span class="item-name">Аддуми</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-f6"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f6')"></div><span class="item-name">Шалифуд</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-f7"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f7')"></div><span class="item-name">Югпродукт</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-f8"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f8')"></div><span class="item-name">Локали</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-f9">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f9')"></div><span class="item-name">Другой поставщик продуктов</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div class="item-expand" id="sup-f9-exp"><input class="mini-input" style="margin-top:8px;" type="text" placeholder="Укажите поставщика..."></div>
         </div>
       </div>
-          <div class="item-row" id="sup-2">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
-          <span class="item-name">Фортайм(</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
+    </div>
+
+    <!-- НАПИТКИ -->
+    <div class="acc-group">
+      <div class="acc-group-head" onclick="toggleAcc('acc-drinks')">
+        <span class="acc-group-title">🧃 Напитки</span>
+        <span class="acc-arrow" id="arr-acc-drinks">›</span>
+      </div>
+      <div class="acc-group-body" id="acc-drinks">
+        <div class="item-row" id="sup-d1"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-d1')"></div><span class="item-name">Напитки Арби/Беслан</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-d2"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-d2')"></div><span class="item-name">Сиропы</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-d3"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-d3')"></div><span class="item-name">Стом</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-d4"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-d4')"></div><span class="item-name">Исаев</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-d5"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-d5')"></div><span class="item-name">Инзаре</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-d6">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-d6')"></div><span class="item-name">Другой поставщик напитков</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div class="item-expand" id="sup-d6-exp"><input class="mini-input" style="margin-top:8px;" type="text" placeholder="Укажите поставщика..."></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- УПАКОВКА -->
+    <div class="acc-group">
+      <div class="acc-group-head" onclick="toggleAcc('acc-pack')">
+        <span class="acc-group-title">📦 Упаковка</span>
+        <span class="acc-arrow" id="arr-acc-pack">›</span>
+      </div>
+      <div class="acc-group-body" id="acc-pack">
+        <div class="item-row" id="sup-p1"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-p1')"></div><span class="item-name">Фортайм</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-p2">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-p2')"></div><span class="item-name">Другой поставщик упаковки</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div class="item-expand" id="sup-p2-exp"><input class="mini-input" style="margin-top:8px;" type="text" placeholder="Укажите поставщика..."></div>
         </div>
       </div>
     </div>
   </div>
-      <div class="item-row" id="sup-3">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-2')"></div>
-          <span class="item-name">Океан</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-      <div class="item-row" id="sup-4">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-3')"></div>
-          <span class="item-name">Филе</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    //нач
-      <div class="item-row" id="sup-5">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-4')"></div>
-          <span class="item-name">Фарш</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-   //конец
-      <div class="item-row" id="sup-6">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
-          <span class="item-name">Шалифуд</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    </div>
-  </div>
-        <div class="item-row" id="sup-7">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
-          <span class="item-name">Аддуми</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    </div>
-  </div>
-          <div class="item-row" id="sup-8">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
-          <span class="item-name">Югпродукт</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    </div>
-  </div>
-          <div class="item-row" id="sup-9">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
-          <span class="item-name">Аддуми</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    </div>
-  </div>
-          <div class="item-row" id="sup-10">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
-          <span class="item-name">Напитки Арби/Беслан(</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    </div>
-  </div>
-    <div class="item-row" id="sup-11">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')">Сиропы</div>
-          <span class="item-name">(</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    </div>
-  </div>
-    <div class="item-row" id="sup-12">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
-          <span class="item-name">Исаев(</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    </div>
-  </div>
-    <div class="item-row" id="sup-13">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
-          <span class="item-name">Инзаре(</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    </div>
-  </div>
-    <div class="item-row" id="sup-14">
-        <div class="item-row-head">
-          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
-          <span class="item-name">Стом(</span>
-          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-        </div>
-      </div>
-    </div>
-  </div>
+
   <!-- ПРОЧАЯ ОПЛАТА -->
   <div id="exp-other" class="exp-section">
     <div class="sec-label">ВЫБЕРИТЕ КАТЕГОРИИ</div>
-    <div class="item-row" id="oth-1">
-      <div class="item-row-head">
-        <div class="item-checkbox" onclick="toggleOth('oth-1')"></div>
-        <span class="item-name">Аренда помещения</span>
+
+    <!-- РАСХОДЫ ТОЧКИ -->
+    <div class="acc-group">
+      <div class="acc-group-head" onclick="toggleAcc('acc-point')">
+        <span class="acc-group-title">🏪 Расходы точки</span>
+        <span class="acc-arrow" id="arr-acc-point">›</span>
       </div>
-      <div class="item-expand" id="oth-1-exp">
-        <div class="expand-2">
-          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+      <div class="acc-group-body" id="acc-point">
+        <div class="item-row" id="oth-p1">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p1')"></div><span class="item-name">Комм. услуги</span></div>
+          <div class="item-expand" id="oth-p1-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-p2">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p2')"></div><span class="item-name">Оборудование / Техника / Мебель / Инвентарь</span></div>
+          <div class="item-expand" id="oth-p2-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-p3">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p3')"></div><span class="item-name">Ремонт (оборудования или точки)</span></div>
+          <div class="item-expand" id="oth-p3-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-p4">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p4')"></div><span class="item-name">Вывоз мусора</span></div>
+          <div class="item-expand" id="oth-p4-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-p5">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p5')"></div><span class="item-name">Хоз. расход (моющие, канцелярия и прочее)</span></div>
+          <div class="item-expand" id="oth-p5-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-p6">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p6')"></div><span class="item-name">Транспортный расход</span></div>
+          <div class="item-expand" id="oth-p6-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="item-row" id="oth-2">
-      <div class="item-row-head">
-        <div class="item-checkbox" onclick="toggleOth('oth-2')"></div>
-        <span class="item-name">Коммунальные услуги</span>
+
+    <!-- МАРКЕТИНГ -->
+    <div class="acc-group">
+      <div class="acc-group-head" onclick="toggleAcc('acc-mkt')">
+        <span class="acc-group-title">📣 Маркетинг</span>
+        <span class="acc-arrow" id="arr-acc-mkt">›</span>
       </div>
-      <div class="item-expand" id="oth-2-exp">
-        <div class="expand-2">
-          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+      <div class="acc-group-body" id="acc-mkt">
+        <div class="item-row" id="oth-m1">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m1')"></div><span class="item-name">ЯМ</span></div>
+          <div class="item-expand" id="oth-m1-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-m2">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m2')"></div><span class="item-name">Сих-Сих</span></div>
+          <div class="item-expand" id="oth-m2-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-m3">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m3')"></div><span class="item-name">Курьер. услуги</span></div>
+          <div class="item-expand" id="oth-m3-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-m4">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m4')"></div><span class="item-name">Рекламный или комплимент чек</span></div>
+          <div class="item-expand" id="oth-m4-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-m5">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m5')"></div><span class="item-name">Брендинг / Дизайн</span></div>
+          <div class="item-expand" id="oth-m5-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-m6">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m6')"></div><span class="item-name">Реклама (услуги)</span></div>
+          <div class="item-expand" id="oth-m6-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="item-row" id="oth-3">
-      <div class="item-row-head">
-        <div class="item-checkbox" onclick="toggleOth('oth-3')"></div>
-        <span class="item-name">Хоз. товары</span>
+
+    <!-- ДРУГОЕ -->
+    <div class="acc-group">
+      <div class="acc-group-head" onclick="toggleAcc('acc-misc')">
+        <span class="acc-group-title">📂 Другое</span>
+        <span class="acc-arrow" id="arr-acc-misc">›</span>
       </div>
-      <div class="item-expand" id="oth-3-exp">
-        <div class="expand-2">
-          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+      <div class="acc-group-body" id="acc-misc">
+        <div class="item-row" id="oth-o1">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o1')"></div><span class="item-name">Неоплаченный чек</span></div>
+          <div class="item-expand" id="oth-o1-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="item-row" id="oth-4">
-      <div class="item-row-head">
-        <div class="item-checkbox" onclick="toggleOth('oth-4')"></div>
-        <span class="item-name">Ремонт / обслуживание</span>
-      </div>
-      <div class="item-expand" id="oth-4-exp">
-        <div class="expand-2">
-          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        <div class="item-row" id="oth-o2">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o2')"></div><span class="item-name">Возврат</span></div>
+          <div class="item-expand" id="oth-o2-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="item-row" id="oth-5">
-      <div class="item-row-head">
-        <div class="item-checkbox" onclick="toggleOth('oth-5')"></div>
-        <span class="item-name">Прочее</span>
-      </div>
-      <div class="item-expand" id="oth-5-exp">
-        <div class="expand-2">
-          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        <div class="item-row" id="oth-o3">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o3')"></div><span class="item-name">Проверка / Проработка</span></div>
+          <div class="item-expand" id="oth-o3-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-o4">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o4')"></div><span class="item-name">Прочее</span></div>
+          <div class="item-expand" id="oth-o4-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -588,17 +656,10 @@ textarea.field-input { resize: none; line-height: 1.5; }
     <div class="sec-label">ДОБАВЬТЕ ВЫПЛАТЫ ПО ПОЗИЦИЯМ</div>
     <div class="salary-item">
       <div class="salary-head">
-        <span class="salary-title">Повар</span>
-        <button class="add-line-btn" onclick="addSal('sal-cook','Повар')">+ Добавить</button>
+        <span class="salary-title">Менеджер</span>
+        <button class="add-line-btn" onclick="addSal('sal-manager','Менеджер')">+ Добавить</button>
       </div>
-      <div class="salary-lines" id="sal-cook"></div>
-    </div>
-    <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Официант</span>
-        <button class="add-line-btn" onclick="addSal('sal-waiter','Официант')">+ Добавить</button>
-      </div>
-      <div class="salary-lines" id="sal-waiter"></div>
+      <div class="salary-lines" id="sal-manager"></div>
     </div>
     <div class="salary-item">
       <div class="salary-head">
@@ -609,10 +670,52 @@ textarea.field-input { resize: none; line-height: 1.5; }
     </div>
     <div class="salary-item">
       <div class="salary-head">
-        <span class="salary-title">Уборщик</span>
-        <button class="add-line-btn" onclick="addSal('sal-cleaner','Уборщик')">+ Добавить</button>
+        <span class="salary-title">Сборка / Раздача</span>
+        <button class="add-line-btn" onclick="addSal('sal-assembly','Сборка / Раздача')">+ Добавить</button>
       </div>
-      <div class="salary-lines" id="sal-cleaner"></div>
+      <div class="salary-lines" id="sal-assembly"></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Закупщик</span>
+        <button class="add-line-btn" onclick="addSal('sal-buyer','Закупщик')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-buyer"></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Заготовщик</span>
+        <button class="add-line-btn" onclick="addSal('sal-prep','Заготовщик')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-prep"></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Повар</span>
+        <button class="add-line-btn" onclick="addSal('sal-cook','Повар')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-cook"></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Техперсонал</span>
+        <button class="add-line-btn" onclick="addSal('sal-tech','Техперсонал')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-tech"></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Курьер</span>
+        <button class="add-line-btn" onclick="addSal('sal-courier','Курьер')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-courier"></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Другой сотрудник</span>
+        <button class="add-line-btn" onclick="addSal('sal-other','Другой сотрудник')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-other"></div>
     </div>
   </div>
 
@@ -642,29 +745,74 @@ textarea.field-input { resize: none; line-height: 1.5; }
 
   <div class="sec-label">ОТМЕТЬТЕ ПОСТАВЩИКОВ С ЗАДОЛЖЕННОСТЬЮ</div>
 
-  <div class="sup-row" id="inv-1">
-    <div class="item-checkbox" onclick="toggleInv('inv-1')"></div>
-    <span class="sup-name">Молочная ферма «Юг»</span>
+  <div class="sup-row" id="inv-f8">
+    <div class="item-checkbox" onclick="toggleInv('inv-f8')"></div>
+    <span class="sup-name">Локали</span>
     <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
   </div>
-  <div class="sup-row" id="inv-2">
-    <div class="item-checkbox" onclick="toggleInv('inv-2')"></div>
-    <span class="sup-name">Мясной двор</span>
+  <div class="sup-row" id="inv-f7">
+    <div class="item-checkbox" onclick="toggleInv('inv-f7')"></div>
+    <span class="sup-name">Югпродукт</span>
     <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
   </div>
-  <div class="sup-row" id="inv-3">
-    <div class="item-checkbox" onclick="toggleInv('inv-3')"></div>
-    <span class="sup-name">Хлебозавод №1</span>
+  <div class="sup-row" id="inv-f6">
+    <div class="item-checkbox" onclick="toggleInv('inv-f6')"></div>
+    <span class="sup-name">Шалифуд</span>
     <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
   </div>
-  <div class="sup-row" id="inv-4">
-    <div class="item-checkbox" onclick="toggleInv('inv-4')"></div>
-    <span class="sup-name">Овощная база</span>
+  <div class="sup-row" id="inv-f1">
+    <div class="item-checkbox" onclick="toggleInv('inv-f1')"></div>
+    <span class="sup-name">Рынок (Беркат)</span>
     <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
   </div>
-  <div class="sup-row" id="inv-5">
-    <div class="item-checkbox" onclick="toggleInv('inv-5')"></div>
-    <span class="sup-name">Рыбный рынок</span>
+  <div class="sup-row" id="inv-f2">
+    <div class="item-checkbox" onclick="toggleInv('inv-f2')"></div>
+    <span class="sup-name">Филе</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-f3">
+    <div class="item-checkbox" onclick="toggleInv('inv-f3')"></div>
+    <span class="sup-name">Фарш</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-f4">
+    <div class="item-checkbox" onclick="toggleInv('inv-f4')"></div>
+    <span class="sup-name">Океан</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-f5">
+    <div class="item-checkbox" onclick="toggleInv('inv-f5')"></div>
+    <span class="sup-name">Аддуми</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-d1">
+    <div class="item-checkbox" onclick="toggleInv('inv-d1')"></div>
+    <span class="sup-name">Напитки Арби/Беслан</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-d2">
+    <div class="item-checkbox" onclick="toggleInv('inv-d2')"></div>
+    <span class="sup-name">Сиропы</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-d3">
+    <div class="item-checkbox" onclick="toggleInv('inv-d3')"></div>
+    <span class="sup-name">Стом</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-d4">
+    <div class="item-checkbox" onclick="toggleInv('inv-d4')"></div>
+    <span class="sup-name">Исаев</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-d5">
+    <div class="item-checkbox" onclick="toggleInv('inv-d5')"></div>
+    <span class="sup-name">Инзаре</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-p1">
+    <div class="item-checkbox" onclick="toggleInv('inv-p1')"></div>
+    <span class="sup-name">Фортайм</span>
     <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
   </div>
 
@@ -810,7 +958,19 @@ function switchCat(cat) {
   });
 }
 
-// ── Toggle supplier checkbox ──
+// ── Accordion toggle ──
+function toggleAcc(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById('arr-'+id);
+  const head = body.previousElementSibling;
+  const open = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+  if (head) head.classList.toggle('open', open);
+}
+
+// ── Toggle supplier with "other" comment field ──
+const supWithComment = ['sup-f9','sup-d6','sup-p2'];
+
 function toggleSup(id) {
   const row = document.getElementById(id);
   const cb = row.querySelector('.item-checkbox');
@@ -819,6 +979,8 @@ function toggleSup(id) {
   cb.textContent = on ? '✓' : '';
   row.classList.toggle('selected', on);
   inp.classList.toggle('show', on);
+  const exp = document.getElementById(id+'-exp');
+  if (exp) exp.classList.toggle('show', on);
   if (!on) { inp.value=''; calcExpenses(); } else inp.focus();
 }
 
@@ -853,7 +1015,7 @@ function calcExpenses() {
   let t = 0;
   document.querySelectorAll('#exp-suppliers .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
   document.querySelectorAll('#exp-other .item-expand.show input[type=number]').forEach(i => t += parseFloat(i.value)||0);
-  document.querySelectorAll('#exp-salary .mini-input').forEach(i => t += parseFloat(i.value)||0);
+  document.querySelectorAll('#exp-salary .mini-input[type=number]').forEach(i => t += parseFloat(i.value)||0);
   document.getElementById('exp-total').textContent = Math.round(t).toLocaleString('ru') + ' ₽';
   window._totalExpenses = t;
 }
@@ -938,36 +1100,122 @@ function rmPhoto(idx) {
   const t=document.getElementById('th-'+idx); if(t) t.remove();
 }
 
+// ── Apps Script URL ──
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPdZznNi5egHvqwW7xAhP9bNmcJs309MH5i8B7PM1b_9eeiHZ3TwNpzihe_X0mKWo/exec';
+
+// ── Collect suppliers data ──
+function collectSuppliers() {
+  const map = {};
+  document.querySelectorAll('#exp-suppliers .item-row.selected').forEach(row => {
+    const name = row.querySelector('.item-name').textContent.trim();
+    const amount = parseFloat(row.querySelector('.inline-amount').value) || 0;
+    map[name] = amount;
+    // "Другой" поставщик — имя из текстового поля
+    const commentInp = row.querySelector('.item-expand input[type=text]');
+    if (commentInp) map[name + ' (имя)'] = commentInp.value.trim();
+  });
+  return map;
+}
+
+// ── Collect other payments ──
+function collectOtherPayments() {
+  const map = {};
+  document.querySelectorAll('#exp-other .item-row.selected').forEach(row => {
+    const name = row.querySelector('.item-name').textContent.trim();
+    const amountInp = row.querySelector('.item-expand input[type=number]');
+    const commentInp = row.querySelector('.item-expand input[type=text]');
+    map[name] = parseFloat(amountInp?.value) || 0;
+    if (commentInp) map[name + ' (комм)'] = commentInp.value.trim();
+  });
+  return map;
+}
+
+// ── Collect salary ──
+function collectSalary() {
+  const map = {};
+  document.querySelectorAll('#exp-salary .salary-item').forEach(item => {
+    const title = item.querySelector('.salary-title').textContent.trim();
+    let total = 0;
+    item.querySelectorAll('.salary-line input[type=number]').forEach(i => total += parseFloat(i.value)||0);
+    if (total > 0) map[title] = total;
+  });
+  return map;
+}
+
+// ── Collect invoices ──
+function collectInvoices() {
+  const map = {};
+  let total = 0;
+  document.querySelectorAll('#screen-s3 .sup-row.active').forEach(row => {
+    const name = row.querySelector('.sup-name').textContent.trim();
+    const amount = parseFloat(row.querySelector('.inline-amount').value) || 0;
+    map[name] = amount;
+    total += amount;
+  });
+  map['__total'] = total;
+  return map;
+}
+
 // ── Submit ──
 async function submitReport() {
   if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
   if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
 
-  // Collect all data
+  const submitBtn = document.querySelector('.btn-primary:last-of-type');
+  submitBtn.textContent = 'Отправляем...';
+  submitBtn.disabled = true;
+
+  const invoices = collectInvoices();
+  const totalInvoices = invoices['__total'] || 0;
+  delete invoices['__total'];
+
+  const opening  = parseFloat(document.getElementById('s1-opening').value) || 0;
+  const revenue  = parseFloat(document.getElementById('f-revenue').value) || 0;
+  const card     = parseFloat(document.getElementById('f-card').value) || 0;
+  const inkass   = parseFloat(document.getElementById('f-inkass').value) || 0;
+  const closing  = parseFloat(document.getElementById('f-closing').value) || 0;
+  const expenses = window._totalExpenses || 0;
+  const calc     = opening + revenue - expenses - card - inkass;
+  const diff     = closing - calc;
+
   const data = {
-    name:     document.getElementById('s1-name').value,
-    location: document.getElementById('s1-loc').value,
-    date:     document.getElementById('s1-date').value,
-    opening:  document.getElementById('s1-opening').value,
+    type:           'shift',
+    date:           document.getElementById('s1-date').value,
+    name:           document.getElementById('s1-name').value,
+    location:       document.getElementById('s1-loc').value,
+    opening:        opening,
     openingComment: document.getElementById('s1-comment').value,
-    totalExpenses: window._totalExpenses || 0,
-    revenue:  document.getElementById('f-revenue').value,
-    card:     document.getElementById('f-card').value,
-    inkass:   document.getElementById('f-inkass').value,
-    safe:     document.getElementById('f-safe').value,
-    closing:  document.getElementById('f-closing').value,
-    comment:  document.getElementById('f-comment').value,
-    photos:   photoFiles.filter(f=>f!==null).length
+    suppliers:      collectSuppliers(),
+    otherPayments:  collectOtherPayments(),
+    salary:         collectSalary(),
+    totalExpenses:  expenses,
+    invoices:       invoices,
+    totalInvoices:  totalInvoices,
+    revenue:        revenue,
+    card:           card,
+    inkass:         inkass,
+    safe:           parseFloat(document.getElementById('f-safe').value) || 0,
+    closing:        closing,
+    calcBalance:    Math.round(calc),
+    diff:           Math.round(diff),
+    verdict:        diff < 0 ? 'Недостача' : diff > 0 ? 'Излишек' : 'Сходится',
+    photos:         photoFiles.filter(f=>f!==null).length,
+    comment:        document.getElementById('f-comment').value
   };
 
-  // TODO: Send to Google Sheets via Apps Script
-  // await fetch('YOUR_APPS_SCRIPT_URL', { method:'POST', body: JSON.stringify(data) });
-
-  console.log('Report data:', data);
-
-  if (tg) tg.sendData(JSON.stringify(data));
-
-  go('screen-success');
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    go('screen-success');
+  } catch (err) {
+    alert('Ошибка отправки. Проверьте интернет и попробуйте снова.');
+    submitBtn.textContent = 'Отправить отчёт ↗';
+    submitBtn.disabled = false;
+  }
 }
 </script>
 </body>
