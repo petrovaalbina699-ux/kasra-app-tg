@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kasra — Отчёт смены</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #1B4D2E;
+  min-height: 100vh;
+  padding: 12px 12px 32px;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── TOP BAR ── */
+.top-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.back-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: #245E37; border: 0.5px solid #3A7A4E;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #F5C518; font-size: 18px; flex-shrink: 0;
+}
+.page-title { font-size: 15px; font-weight: 600; color: #F5C518; }
+.page-sub { font-size: 11px; color: #7AB893; margin-top: 2px; }
+
+/* ── STEP DOTS ── */
+.step-indicator { display: flex; gap: 6px; margin-bottom: 20px; }
+.step-dot { height: 3px; border-radius: 2px; background: #3A7A4E; flex: 1; }
+.step-dot.active { background: #F5C518; }
+
+/* ── LABELS ── */
+.sec-label { font-size: 10px; letter-spacing: 1.3px; color: #7AB893; margin-bottom: 10px; margin-top: 20px; }
+
+/* ── FIELDS ── */
+.field { margin-bottom: 12px; }
+.field-label { font-size: 12px; color: #7AB893; margin-bottom: 6px; }
+.field-input {
+  width: 100%; padding: 11px 14px;
+  background: #245E37; border: 0.5px solid #3A7A4E;
+  border-radius: 12px; color: #F5C518; font-size: 14px;
+  font-family: 'Montserrat', sans-serif; outline: none;
+  appearance: none; -webkit-appearance: none;
+}
+.field-input::placeholder { color: #4A8860; }
+.field-input:focus { border-color: #F5C518; }
+select.field-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237AB893' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  padding-right: 36px; cursor: pointer;
+}
+select.field-input option { background: #1B4D2E; color: #F5C518; }
+textarea.field-input { resize: none; line-height: 1.5; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.char-count { text-align: right; font-size: 11px; color: #4A8860; margin-top: 4px; }
+
+/* amount with ₽ prefix */
+.amount-wrap { position: relative; }
+.amount-wrap .field-input { padding-left: 26px; }
+.rub-sign { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #7AB893; font-size: 14px; pointer-events: none; }
+
+/* ── DIVIDER ── */
+.divider { height: 0.5px; background: #3A7A4E; margin: 18px 0; }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  width: 100%; margin-top: 14px; padding: 13px;
+  background: #F5C518; border: none; border-radius: 14px;
+  color: #1B4D2E; font-size: 14px; font-weight: 600;
+  font-family: 'Montserrat', sans-serif; cursor: pointer; transition: opacity 0.15s;
+}
+.btn-primary:active { opacity: 0.85; }
+
+/* ── HOME MENU ── */
+.logo-area { text-align: center; margin-bottom: 36px; margin-top: 20px; }
+.logo-icon {
+  width: 72px; height: 72px; border-radius: 20px;
+  background: #F5C518; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px; font-size: 32px; color: #1B4D2E;
+}
+.logo-name { font-size: 28px; font-weight: 600; color: #F5C518; letter-spacing: 3px; }
+.logo-sub { font-size: 12px; color: #7AB893; margin-top: 4px; letter-spacing: 1px; }
+.menu-label { font-size: 11px; color: #7AB893; letter-spacing: 1.5px; margin-bottom: 12px; padding-left: 2px; }
+.menu-divider { height: 0.5px; background: #3A7A4E; margin-bottom: 16px; }
+.menu-item {
+  background: #245E37; border: 0.5px solid #3A7A4E; border-radius: 16px;
+  padding: 16px 18px; display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: background 0.15s; margin-bottom: 10px;
+}
+.menu-item:active { background: #2D7345; }
+.menu-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: #1B4D2E; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 22px; color: #F5C518;
+}
+.menu-text { flex: 1; }
+.menu-title { font-size: 15px; font-weight: 500; color: #F5C518; margin-bottom: 3px; }
+.menu-desc { font-size: 12px; color: #7AB893; line-height: 1.4; }
+.menu-arrow { font-size: 16px; color: #3A7A4E; }
+
+/* ── EXPENSES: CAT TABS ── */
+.cat-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+.cat-tab {
+  flex: 1; padding: 9px 4px; font-size: 11px; font-weight: 600;
+  text-align: center; border-radius: 10px; cursor: pointer;
+  border: 0.5px solid #3A7A4E; background: #245E37;
+  color: #7AB893; font-family: 'Montserrat', sans-serif;
+  transition: all 0.15s; line-height: 1.3;
+}
+.cat-tab.active { background: #F5C518; border-color: #F5C518; color: #1B4D2E; }
+.exp-section { display: none; }
+.exp-section.active { display: block; }
+
+/* ── ITEM ROWS (suppliers / other) ── */
+.item-row {
+  background: #245E37; border: 0.5px solid #3A7A4E;
+  border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+}
+.item-row-head { display: flex; align-items: center; gap: 10px; }
+.item-row.selected { border-color: #F5C518; }
+.item-checkbox {
+  width: 20px; height: 20px; border-radius: 6px;
+  border: 0.5px solid #3A7A4E; background: #1B4D2E;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; cursor: pointer; transition: all 0.15s; font-size: 13px;
+}
+.item-checkbox.checked { background: #F5C518; border-color: #F5C518; color: #1B4D2E; }
+.item-name { flex: 1; font-size: 13px; color: #9FD4B8; }
+.item-row.selected .item-name { color: #F5C518; }
+.inline-amount {
+  width: 94px; padding: 7px 10px; background: #1B4D2E;
+  border: 0.5px solid #3A7A4E; border-radius: 8px;
+  color: #F5C518; font-size: 13px; font-family: 'Montserrat', sans-serif;
+  outline: none; display: none; text-align: right;
+}
+.inline-amount.show { display: block; }
+.inline-amount:focus { border-color: #F5C518; }
+.inline-amount::placeholder { color: #4A8860; }
+.item-expand { display: none; padding: 10px 0 2px; }
+.item-expand.show { display: block; }
+.expand-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mini-label { font-size: 11px; color: #7AB893; margin-bottom: 5px; }
+.mini-input {
+  width: 100%; padding: 7px 10px; background: #1B4D2E;
+  border: 0.5px solid #3A7A4E; border-radius: 8px;
+  color: #F5C518; font-size: 12px; font-family: 'Montserrat', sans-serif; outline: none;
+}
+.mini-input:focus { border-color: #F5C518; }
+.mini-input::placeholder { color: #4A8860; }
+
+/* ── SALARY ── */
+.salary-item {
+  background: #245E37; border: 0.5px solid #3A7A4E;
+  border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+}
+.salary-head { display: flex; align-items: center; justify-content: space-between; }
+.salary-title { font-size: 13px; color: #9FD4B8; }
+.add-line-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 5px 10px; border-radius: 8px;
+  background: rgba(245,197,24,0.12); border: 0.5px solid rgba(245,197,24,0.3);
+  color: #F5C518; font-size: 11px; cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+}
+.salary-lines { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.salary-line { display: flex; align-items: center; gap: 8px; }
+.salary-line-lbl { font-size: 12px; color: #7AB893; flex: 1; }
+.del-btn {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: rgba(220,60,60,0.12); border: none;
+  display: flex; align-items: center; justify-content: center;
+  color: #e05555; font-size: 14px; cursor: pointer; flex-shrink: 0;
+}
+
+/* ── TOTAL BAR ── */
+.total-bar {
+  background: rgba(245,197,24,0.1); border: 0.5px solid rgba(245,197,24,0.3);
+  border-radius: 12px; padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 14px;
+}
+.total-label { font-size: 12px; color: #7AB893; }
+.total-val { font-size: 16px; font-weight: 600; color: #F5C518; }
+
+/* ── INVOICES ── */
+.sup-row {
+  background: #245E37; border: 0.5px solid #3A7A4E;
+  border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sup-row.active { border-color: #F5C518; }
+.sup-name { flex: 1; font-size: 13px; color: #9FD4B8; }
+.sup-row.active .sup-name { color: #F5C518; }
+
+/* ── CLOSING BLOCK ── */
+.field-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 14px; background: #245E37; border: 0.5px solid #3A7A4E;
+  border-radius: 12px; margin-bottom: 8px;
+}
+.field-row-label { font-size: 13px; color: #9FD4B8; display: flex; align-items: center; gap: 8px; }
+.field-row-label i { font-size: 16px; color: #7AB893; }
+.field-row.hl { border-color: rgba(245,197,24,0.4); }
+.field-row.hl .field-row-label { color: #F5C518; }
+.field-row.hl .field-row-label i { color: #F5C518; }
+.row-amount {
+  width: 110px; padding: 7px 10px; text-align: right;
+  background: #1B4D2E; border: 0.5px solid #3A7A4E;
+  border-radius: 8px; color: #F5C518; font-size: 13px;
+  font-family: 'Montserrat', sans-serif; outline: none;
+}
+.row-amount:focus { border-color: #F5C518; }
+.row-amount::placeholder { color: #4A8860; }
+.field-row.hl .row-amount { border-color: rgba(245,197,24,0.3); }
+
+.result-box {
+  border-radius: 14px; padding: 14px 16px;
+  background: #245E37; border: 0.5px solid #3A7A4E;
+}
+.result-formula {
+  font-size: 11px; color: #7AB893; margin-bottom: 12px;
+  line-height: 1.7; padding-bottom: 10px;
+  border-bottom: 0.5px solid #3A7A4E;
+}
+.rf-plus { color: #4DC87A; }
+.rf-minus { color: #e05555; }
+.result-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+.result-row:last-child { margin-bottom: 0; }
+.result-name { font-size: 12px; color: #7AB893; }
+.result-val { font-size: 13px; color: #9FD4B8; font-weight: 500; }
+
+.verdict {
+  border-radius: 12px; padding: 12px 14px;
+  display: none; align-items: center; gap: 10px; margin-top: 10px;
+}
+.verdict.show { display: flex; }
+.v-ned { background: rgba(220,60,60,0.15); border: 0.5px solid rgba(220,60,60,0.4); }
+.v-ned .vi { color: #e05555; font-size: 22px; flex-shrink: 0; }
+.v-ned .vt { font-size: 14px; font-weight: 600; color: #e05555; }
+.v-izl { background: rgba(50,180,100,0.15); border: 0.5px solid rgba(50,180,100,0.4); }
+.v-izl .vi { color: #4DC87A; font-size: 22px; flex-shrink: 0; }
+.v-izl .vt { font-size: 14px; font-weight: 600; color: #4DC87A; }
+.va { font-size: 12px; color: #7AB893; margin-top: 2px; }
+
+/* ── PHOTO UPLOAD ── */
+.photo-drop {
+  border: 0.5px dashed #3A7A4E; border-radius: 14px;
+  padding: 18px; text-align: center; cursor: pointer;
+  position: relative; margin-top: 4px; transition: border-color 0.15s;
+}
+.photo-drop:hover { border-color: #F5C518; }
+.photo-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.photo-drop-icon { font-size: 30px; color: #3A7A4E; margin-bottom: 6px; }
+.photo-drop-text { font-size: 13px; color: #7AB893; }
+.photo-drop-hint { font-size: 11px; color: #4A8860; margin-top: 4px; }
+.photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.photo-thumb {
+  border-radius: 10px; overflow: hidden; position: relative;
+  aspect-ratio: 4/3; background: #245E37; border: 0.5px solid #3A7A4E;
+}
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-thumb-del {
+  position: absolute; top: 5px; right: 5px;
+  width: 24px; height: 24px; border-radius: 6px;
+  background: rgba(0,0,0,0.6); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 14px;
+}
+
+/* ── SUCCESS ── */
+.success-wrap { text-align: center; padding: 40px 20px; }
+.success-icon { font-size: 56px; color: #4DC87A; margin-bottom: 16px; }
+.success-title { font-size: 20px; font-weight: 600; color: #F5C518; margin-bottom: 8px; }
+.success-sub { font-size: 14px; color: #7AB893; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HOME ═══════════════════════════════ -->
+<div id="screen-home" class="screen active">
+  <div class="logo-area">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-name">KASRA</div>
+    <div class="logo-sub">Управление персоналом</div>
+  </div>
+  <div class="menu-label">МЕНЮ</div>
+  <div class="menu-divider"></div>
+  <div class="menu-item" onclick="go('screen-s1')">
+    <div class="menu-icon">📋</div>
+    <div class="menu-text">
+      <div class="menu-title">Отчёт закрытия смены</div>
+      <div class="menu-desc">Итоги дня, выручка, инциденты, передача смены</div>
+    </div>
+    <span class="menu-arrow">›</span>
+  </div>
+  <div class="menu-item" onclick="alert('Раздел в разработке')">
+    <div class="menu-icon">💳</div>
+    <div class="menu-text">
+      <div class="menu-title">Провести сторонний платёж</div>
+      <div class="menu-desc">Оплата поставщикам, расходы наличными</div>
+    </div>
+    <span class="menu-arrow">›</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ STEP 1 ═══════════════════════════════ -->
+<div id="screen-s1" class="screen">
+  <div class="top-bar">
+    <div class="back-btn" onclick="go('screen-home')">‹</div>
+    <div>
+      <div class="page-title">Отчёт закрытия смены</div>
+      <div class="page-sub">Шаг 1 из 4 — основная информация</div>
+    </div>
+  </div>
+  <div class="step-indicator">
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <div class="sec-label">СОТРУДНИК И ТОЧКА</div>
+
+  <div class="field">
+    <div class="field-label">Имя кассира</div>
+    <input class="field-input" type="text" id="s1-name" placeholder="Введите имя...">
+  </div>
+
+  <div class="row-2">
+    <div class="field">
+      <div class="field-label">Точка</div>
+      <select class="field-input" id="s1-loc">
+        <option value="" disabled selected>Выберите...</option>
+        <option>Полярников</option>
+        <option>Садаева</option>
+        <option>Шали</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="field-label">Дата смены</div>
+      <input class="field-input" type="date" id="s1-date">
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="sec-label">ОСТАТОК НА НАЧАЛО ДНЯ</div>
+
+  <div class="field">
+    <div class="field-label">Сумма в кассе</div>
+    <div class="amount-wrap">
+      <span class="rub-sign">₽</span>
+      <input class="field-input" type="number" id="s1-opening" placeholder="0">
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">Комментарий <span style="color:#4A8860;">(необязательно)</span></div>
+    <textarea class="field-input" rows="3" id="s1-comment" maxlength="300"
+      placeholder="Пример: из сейфа в кассу положили 20 000 ₽..."
+      oninput="document.getElementById('s1-cc').textContent=this.value.length+'/300'"></textarea>
+    <div class="char-count"><span id="s1-cc">0</span>/300</div>
+  </div>
+
+  <button class="btn-primary" onclick="nextS1()">Далее →</button>
+</div>
+
+<!-- ═══════════════════════════════ STEP 2 ═══════════════════════════════ -->
+<div id="screen-s2" class="screen">
+  <div class="top-bar">
+    <div class="back-btn" onclick="go('screen-s1')">‹</div>
+    <div>
+      <div class="page-title">Расходы из кассы</div>
+      <div class="page-sub">Шаг 2 из 4</div>
+    </div>
+  </div>
+  <div class="step-indicator">
+    <div class="step-dot"></div>
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <div class="cat-tabs">
+    <div class="cat-tab active" onclick="switchCat('suppliers')">Поставщики</div>
+    <div class="cat-tab" onclick="switchCat('other')">Прочая оплата</div>
+    <div class="cat-tab" onclick="switchCat('salary')">Зарплата</div>
+  </div>
+
+  <!-- ПОСТАВЩИКИ -->
+  <div id="exp-suppliers" class="exp-section active">
+    <div class="sec-label">ВЫБЕРИТЕ ПОСТАВЩИКОВ И СУММЫ</div>
+    <div id="sup-list">
+      <div class="item-row" id="sup-1">
+        <div class="item-row-head">
+          <div class="item-checkbox" onclick="toggleSup('sup-1')"></div>
+          <span class="item-name">Молочная ферма «Юг»</span>
+          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
+        </div>
+      </div>
+      <div class="item-row" id="sup-2">
+        <div class="item-row-head">
+          <div class="item-checkbox" onclick="toggleSup('sup-2')"></div>
+          <span class="item-name">Мясной двор</span>
+          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
+        </div>
+      </div>
+      <div class="item-row" id="sup-3">
+        <div class="item-row-head">
+          <div class="item-checkbox" onclick="toggleSup('sup-3')"></div>
+          <span class="item-name">Хлебозавод №1</span>
+          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
+        </div>
+      </div>
+      <div class="item-row" id="sup-4">
+        <div class="item-row-head">
+          <div class="item-checkbox" onclick="toggleSup('sup-4')"></div>
+          <span class="item-name">Овощная база</span>
+          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
+        </div>
+      </div>
+      <div class="item-row" id="sup-5">
+        <div class="item-row-head">
+          <div class="item-checkbox" onclick="toggleSup('sup-5')"></div>
+          <span class="item-name">Рыбный рынок</span>
+          <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПРОЧАЯ ОПЛАТА -->
+  <div id="exp-other" class="exp-section">
+    <div class="sec-label">ВЫБЕРИТЕ КАТЕГОРИИ</div>
+    <div class="item-row" id="oth-1">
+      <div class="item-row-head">
+        <div class="item-checkbox" onclick="toggleOth('oth-1')"></div>
+        <span class="item-name">Аренда помещения</span>
+      </div>
+      <div class="item-expand" id="oth-1-exp">
+        <div class="expand-2">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+    <div class="item-row" id="oth-2">
+      <div class="item-row-head">
+        <div class="item-checkbox" onclick="toggleOth('oth-2')"></div>
+        <span class="item-name">Коммунальные услуги</span>
+      </div>
+      <div class="item-expand" id="oth-2-exp">
+        <div class="expand-2">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+    <div class="item-row" id="oth-3">
+      <div class="item-row-head">
+        <div class="item-checkbox" onclick="toggleOth('oth-3')"></div>
+        <span class="item-name">Хоз. товары</span>
+      </div>
+      <div class="item-expand" id="oth-3-exp">
+        <div class="expand-2">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+    <div class="item-row" id="oth-4">
+      <div class="item-row-head">
+        <div class="item-checkbox" onclick="toggleOth('oth-4')"></div>
+        <span class="item-name">Ремонт / обслуживание</span>
+      </div>
+      <div class="item-expand" id="oth-4-exp">
+        <div class="expand-2">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+    <div class="item-row" id="oth-5">
+      <div class="item-row-head">
+        <div class="item-checkbox" onclick="toggleOth('oth-5')"></div>
+        <span class="item-name">Прочее</span>
+      </div>
+      <div class="item-expand" id="oth-5-exp">
+        <div class="expand-2">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАРПЛАТА -->
+  <div id="exp-salary" class="exp-section">
+    <div class="sec-label">ДОБАВЬТЕ ВЫПЛАТЫ ПО ПОЗИЦИЯМ</div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Повар</span>
+        <button class="add-line-btn" onclick="addSal('sal-cook','Повар')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-cook"></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Официант</span>
+        <button class="add-line-btn" onclick="addSal('sal-waiter','Официант')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-waiter"></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Кассир</span>
+        <button class="add-line-btn" onclick="addSal('sal-cashier','Кассир')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-cashier"></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-head">
+        <span class="salary-title">Уборщик</span>
+        <button class="add-line-btn" onclick="addSal('sal-cleaner','Уборщик')">+ Добавить</button>
+      </div>
+      <div class="salary-lines" id="sal-cleaner"></div>
+    </div>
+  </div>
+
+  <div class="total-bar">
+    <span class="total-label">Итого расходов</span>
+    <span class="total-val" id="exp-total">0 ₽</span>
+  </div>
+
+  <button class="btn-primary" onclick="go('screen-s3')">Далее →</button>
+</div>
+
+<!-- ═══════════════════════════════ STEP 3 ═══════════════════════════════ -->
+<div id="screen-s3" class="screen">
+  <div class="top-bar">
+    <div class="back-btn" onclick="go('screen-s2')">‹</div>
+    <div>
+      <div class="page-title">Неоплаченные накладные</div>
+      <div class="page-sub">Шаг 3 из 4</div>
+    </div>
+  </div>
+  <div class="step-indicator">
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <div class="sec-label">ОТМЕТЬТЕ ПОСТАВЩИКОВ С ЗАДОЛЖЕННОСТЬЮ</div>
+
+  <div class="sup-row" id="inv-1">
+    <div class="item-checkbox" onclick="toggleInv('inv-1')"></div>
+    <span class="sup-name">Молочная ферма «Юг»</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-2">
+    <div class="item-checkbox" onclick="toggleInv('inv-2')"></div>
+    <span class="sup-name">Мясной двор</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-3">
+    <div class="item-checkbox" onclick="toggleInv('inv-3')"></div>
+    <span class="sup-name">Хлебозавод №1</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-4">
+    <div class="item-checkbox" onclick="toggleInv('inv-4')"></div>
+    <span class="sup-name">Овощная база</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+  <div class="sup-row" id="inv-5">
+    <div class="item-checkbox" onclick="toggleInv('inv-5')"></div>
+    <span class="sup-name">Рыбный рынок</span>
+    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
+  </div>
+
+  <div class="total-bar">
+    <span class="total-label">Итого задолженность</span>
+    <span class="total-val" id="inv-total">0 ₽</span>
+  </div>
+
+  <p style="text-align:center;font-size:11px;color:#4A8860;margin-top:10px;">Если накладных нет — просто нажмите «Далее»</p>
+  <button class="btn-primary" onclick="go('screen-s4')">Далее →</button>
+</div>
+
+<!-- ═══════════════════════════════ STEP 4 ═══════════════════════════════ -->
+<div id="screen-s4" class="screen">
+  <div class="top-bar">
+    <div class="back-btn" onclick="go('screen-s3')">‹</div>
+    <div>
+      <div class="page-title">Итоги смены</div>
+      <div class="page-sub">Шаг 4 из 4 — завершение</div>
+    </div>
+  </div>
+  <div class="step-indicator">
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot active"></div>
+  </div>
+
+  <div class="sec-label">СУММЫ ЗА ДЕНЬ</div>
+
+  <div class="field-row">
+    <div class="field-row-label">📈 Выручка</div>
+    <input class="row-amount" type="number" placeholder="0 ₽" id="f-revenue" oninput="calcClosing()">
+  </div>
+  <div class="field-row">
+    <div class="field-row-label">💳 Безнал</div>
+    <input class="row-amount" type="number" placeholder="0 ₽" id="f-card" oninput="calcClosing()">
+  </div>
+  <div class="field-row">
+    <div class="field-row-label">🏦 Инкассация</div>
+    <input class="row-amount" type="number" placeholder="0 ₽" id="f-inkass" oninput="calcClosing()">
+  </div>
+  <div class="field-row">
+    <div class="field-row-label">🔒 Сейф</div>
+    <input class="row-amount" type="number" placeholder="0 ₽" id="f-safe">
+  </div>
+  <div class="field-row hl">
+    <div class="field-row-label">💵 Остаток на конец дня</div>
+    <input class="row-amount" type="number" placeholder="0 ₽" id="f-closing" oninput="calcClosing()">
+  </div>
+
+  <div class="divider"></div>
+  <div class="sec-label">РАСЧЁТ</div>
+
+  <div class="result-box">
+    <div class="result-formula">
+      <span class="rf-plus">Нач. остаток</span> + <span class="rf-plus">Выручка</span> − <span class="rf-minus">Расходы</span> − <span class="rf-minus">Безнал</span> − <span class="rf-minus">Инкассация</span>
+    </div>
+    <div class="result-row">
+      <span class="result-name">Расчётный остаток</span>
+      <span class="result-val" id="r-calc">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-name">Фактический остаток</span>
+      <span class="result-val" id="r-actual">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-name">Разница</span>
+      <span class="result-val" id="r-diff">—</span>
+    </div>
+  </div>
+
+  <div class="verdict v-ned" id="v-ned">
+    <span class="vi">⚠️</span>
+    <div><div class="vt">Недостача</div><div class="va" id="v-ned-amt"></div></div>
+  </div>
+  <div class="verdict v-izl" id="v-izl">
+    <span class="vi">✅</span>
+    <div><div class="vt">Излишек</div><div class="va" id="v-izl-amt"></div></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="sec-label">ФОТО НАКЛАДНЫХ</div>
+  <div class="photo-drop">
+    <input type="file" accept="image/*" multiple onchange="handlePhotos(this)">
+    <div class="photo-drop-icon">📷</div>
+    <div class="photo-drop-text">Нажмите чтобы добавить фото</div>
+    <div class="photo-drop-hint">Можно выбрать несколько сразу</div>
+  </div>
+  <div class="photo-grid" id="photo-grid"></div>
+
+  <div class="sec-label" style="margin-top:20px;">КОММЕНТАРИЙ К СМЕНЕ</div>
+  <textarea class="field-input" rows="3" id="f-comment" maxlength="500"
+    placeholder="Причина недостачи, особые ситуации или любой комментарий..."></textarea>
+
+  <button class="btn-primary" onclick="submitReport()">Отправить отчёт ↗</button>
+</div>
+
+<!-- ═══════════════════════════════ SUCCESS ═══════════════════════════════ -->
+<div id="screen-success" class="screen">
+  <div class="success-wrap">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Отчёт отправлен!</div>
+    <div class="success-sub">Данные записаны в таблицу.<br>Спасибо за смену!</div>
+    <button class="btn-primary" style="margin-top:32px;" onclick="go('screen-home')">На главную</button>
+  </div>
+</div>
+
+<script>
+// ── Telegram Web App init ──
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+// ── Today's date ──
+const today = new Date();
+document.getElementById('s1-date').value =
+  today.getFullYear() + '-' +
+  String(today.getMonth()+1).padStart(2,'0') + '-' +
+  String(today.getDate()).padStart(2,'0');
+
+// ── Navigation ──
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── Step 1 validation ──
+function nextS1() {
+  if (!document.getElementById('s1-name').value.trim()) { alert('Введите имя кассира'); return; }
+  if (!document.getElementById('s1-loc').value) { alert('Выберите точку'); return; }
+  if (!document.getElementById('s1-opening').value) { alert('Укажите сумму на начало дня'); return; }
+  go('screen-s2');
+}
+
+// ── Expenses: category tabs ──
+function switchCat(cat) {
+  ['suppliers','other','salary'].forEach(c => {
+    document.getElementById('exp-'+c).classList.toggle('active', c===cat);
+  });
+  document.querySelectorAll('.cat-tab').forEach((t,i) => {
+    t.classList.toggle('active', ['suppliers','other','salary'][i]===cat);
+  });
+}
+
+// ── Toggle supplier checkbox ──
+function toggleSup(id) {
+  const row = document.getElementById(id);
+  const cb = row.querySelector('.item-checkbox');
+  const inp = row.querySelector('.inline-amount');
+  const on = cb.classList.toggle('checked');
+  cb.textContent = on ? '✓' : '';
+  row.classList.toggle('selected', on);
+  inp.classList.toggle('show', on);
+  if (!on) { inp.value=''; calcExpenses(); } else inp.focus();
+}
+
+// ── Toggle other checkbox ──
+function toggleOth(id) {
+  const row = document.getElementById(id);
+  const cb = row.querySelector('.item-checkbox');
+  const exp = document.getElementById(id+'-exp');
+  const on = cb.classList.toggle('checked');
+  cb.textContent = on ? '✓' : '';
+  row.classList.toggle('selected', on);
+  exp.classList.toggle('show', on);
+  if (!on) { exp.querySelectorAll('input').forEach(i=>i.value=''); calcExpenses(); }
+}
+
+// ── Salary lines ──
+let salC = 0;
+function addSal(containerId, label) {
+  const id = 'sl-'+(++salC);
+  const c = document.getElementById(containerId);
+  const n = c.children.length + 1;
+  const d = document.createElement('div');
+  d.className = 'salary-line'; d.id = id;
+  d.innerHTML = `<span class="salary-line-lbl">${label} #${n}</span>
+    <input class="mini-input" style="width:100px;text-align:right;" type="number" placeholder="0 ₽" oninput="calcExpenses()">
+    <button class="del-btn" onclick="document.getElementById('${id}').remove();calcExpenses()">×</button>`;
+  c.appendChild(d);
+}
+
+// ── Calc total expenses ──
+function calcExpenses() {
+  let t = 0;
+  document.querySelectorAll('#exp-suppliers .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
+  document.querySelectorAll('#exp-other .item-expand.show input[type=number]').forEach(i => t += parseFloat(i.value)||0);
+  document.querySelectorAll('#exp-salary .mini-input').forEach(i => t += parseFloat(i.value)||0);
+  document.getElementById('exp-total').textContent = Math.round(t).toLocaleString('ru') + ' ₽';
+  window._totalExpenses = t;
+}
+window._totalExpenses = 0;
+
+// ── Toggle invoice ──
+function toggleInv(id) {
+  const row = document.getElementById(id);
+  const cb = row.querySelector('.item-checkbox');
+  const inp = row.querySelector('.inline-amount');
+  const on = cb.classList.toggle('checked');
+  cb.textContent = on ? '✓' : '';
+  row.classList.toggle('active', on);
+  inp.classList.toggle('show', on);
+  if (!on) { inp.value=''; calcInv(); } else inp.focus();
+}
+function calcInv() {
+  let t = 0;
+  document.querySelectorAll('#screen-s3 .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
+  document.getElementById('inv-total').textContent = Math.round(t).toLocaleString('ru') + ' ₽';
+}
+
+// ── Closing calc ──
+function calcClosing() {
+  const opening = parseFloat(document.getElementById('s1-opening').value)||0;
+  const revenue = parseFloat(document.getElementById('f-revenue').value)||0;
+  const card    = parseFloat(document.getElementById('f-card').value)||0;
+  const inkass  = parseFloat(document.getElementById('f-inkass').value)||0;
+  const closing = parseFloat(document.getElementById('f-closing').value)||0;
+  const expenses = window._totalExpenses || 0;
+
+  const calculated = opening + revenue - expenses - card - inkass;
+  const diff = closing - calculated;
+
+  document.getElementById('r-calc').textContent   = revenue>0 ? Math.round(calculated).toLocaleString('ru')+' ₽' : '—';
+  document.getElementById('r-actual').textContent = closing>0 ? Math.round(closing).toLocaleString('ru')+' ₽' : '—';
+
+  const ned = document.getElementById('v-ned');
+  const izl = document.getElementById('v-izl');
+  const diffEl = document.getElementById('r-diff');
+
+  if (revenue>0 && closing>0) {
+    const abs = Math.abs(Math.round(diff)).toLocaleString('ru')+' ₽';
+    if (diff < 0) {
+      diffEl.textContent = '−'+abs; diffEl.style.color='#e05555';
+      ned.classList.add('show'); izl.classList.remove('show');
+      document.getElementById('v-ned-amt').textContent = abs+' не хватает в кассе';
+    } else if (diff > 0) {
+      diffEl.textContent = '+'+abs; diffEl.style.color='#4DC87A';
+      izl.classList.add('show'); ned.classList.remove('show');
+      document.getElementById('v-izl-amt').textContent = abs+' сверх расчёта';
+    } else {
+      diffEl.textContent = '0 ₽ — всё сходится'; diffEl.style.color='#4DC87A';
+      ned.classList.remove('show'); izl.classList.remove('show');
+    }
+  } else {
+    diffEl.textContent='—'; diffEl.style.color='#9FD4B8';
+    ned.classList.remove('show'); izl.classList.remove('show');
+  }
+}
+
+// ── Photo upload ──
+let photoFiles = [];
+function handlePhotos(input) {
+  Array.from(input.files).forEach(file => {
+    const idx = photoFiles.length;
+    photoFiles.push(file);
+    const reader = new FileReader();
+    reader.onload = e => {
+      const grid = document.getElementById('photo-grid');
+      const t = document.createElement('div');
+      t.className='photo-thumb'; t.id='th-'+idx;
+      t.innerHTML=`<img src="${e.target.result}" alt="фото"><button class="photo-thumb-del" onclick="rmPhoto(${idx})">×</button>`;
+      grid.appendChild(t);
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+function rmPhoto(idx) {
+  photoFiles[idx]=null;
+  const t=document.getElementById('th-'+idx); if(t) t.remove();
+}
+
+// ── Submit ──
+async function submitReport() {
+  if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
+  if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
+
+  // Collect all data
+  const data = {
+    name:     document.getElementById('s1-name').value,
+    location: document.getElementById('s1-loc').value,
+    date:     document.getElementById('s1-date').value,
+    opening:  document.getElementById('s1-opening').value,
+    openingComment: document.getElementById('s1-comment').value,
+    totalExpenses: window._totalExpenses || 0,
+    revenue:  document.getElementById('f-revenue').value,
+    card:     document.getElementById('f-card').value,
+    inkass:   document.getElementById('f-inkass').value,
+    safe:     document.getElementById('f-safe').value,
+    closing:  document.getElementById('f-closing').value,
+    comment:  document.getElementById('f-comment').value,
+    photos:   photoFiles.filter(f=>f!==null).length
+  };
+
+  // TODO: Send to Google Sheets via Apps Script
+  // await fetch('YOUR_APPS_SCRIPT_URL', { method:'POST', body: JSON.stringify(data) });
+
+  console.log('Report data:', data);
+
+  if (tg) tg.sendData(JSON.stringify(data));
+
+  go('screen-success');
+}
+</script>
+</body>
+</html>
