@@ -303,11 +303,10 @@ textarea.field-input { resize: none; line-height: 1.5; }
 
 <!-- ═══════════════════════════════ HOME ═══════════════════════════════ -->
 <div id="screen-home" class="screen active">
-  <div class="logo-area">
-    <div class="logo-icon">🏪</div>
-    <div class="logo-name">KASRA</div>
-    <div class="logo-sub">Управление персоналом</div>
-  </div>
+<div class="logo-area">
+  <div style="font-size: 52px; font-weight: 700; color: #F5C518; letter-spacing: 4px; margin-bottom: 8px; text-align: center;">KASRA</div>
+  <div style="font-size: 13px; color: #1B4D2E; letter-spacing: 3px; text-align: center; font-weight: 500;">arabian fastfood</div>
+</div>
   <div class="menu-label">МЕНЮ</div>
   <div class="menu-divider"></div>
   <div class="menu-item" onclick="go('screen-s1')">
@@ -321,7 +320,7 @@ textarea.field-input { resize: none; line-height: 1.5; }
   <div class="menu-item" onclick="alert('Раздел в разработке')">
     <div class="menu-icon">💵</div>
     <div class="menu-text">
-      <div class="menu-title">Провести сторонний платёж</div>
+      <div class="menu-title">Расход вне кассы</div>
       <div class="menu-desc">Оплата поставщикам, расходы наличными</div>
     </div>
     <span class="menu-arrow">›</span>
@@ -1101,7 +1100,7 @@ function rmPhoto(idx) {
 }
 
 // ── Apps Script URL ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwx_hx79pkzOGhH6dsZ-K6K3yaZxp3U7HaD4FpNl1L9BWJyYG-mhBUZSwL4BCqUs4w/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx50gKw87cBzpiEcrm9aDFIwBMbsYoNIFZ5xW5tKlBHNog6SXmU4rd1FMOf0UAvGF0/exec';
 
 // ── Collect suppliers data ──
 function collectSuppliers() {
