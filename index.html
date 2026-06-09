@@ -316,15 +316,15 @@ textarea.field-input { resize: none; line-height: 1.5; }
       <div class="menu-title">Отчёт закрытия смены</div>
       <div class="menu-desc">Итоги дня, выручка, инциденты, передача смены</div>
     </div>
-    <span class="menu-arrow">›</span>
+    <span class="menu-arrow">💵</span>
   </div>
   <div class="menu-item" onclick="alert('Раздел в разработке')">
-    <div class="menu-icon">💳</div>
+    <div class="menu-icon"></div>
     <div class="menu-text">
-      <div class="menu-title">Провести сторонний платёж</div>
-      <div class="menu-desc">Оплата поставщикам, расходы наличными</div>
+      <div class="menu-title">Сторонний расход </div>
+      <div class="menu-desc"</div>
     </div>
-    <span class="menu-arrow">›</span>
+    <span class="menu-arrow">›Бухгалтерский расход</span>
   </div>
 </div>
 
@@ -1157,11 +1157,15 @@ function collectInvoices() {
 }
 
 // ── Submit ──
+// ── Apps Script URL (ВСТАВЬТЕ СЮДА ВАШ НОВЫЙ URL из Шага 3) ──
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxNekF-AV4gxUC0oaWya4zKUvfJypRF5FIgBH6KfGdyVgB2XRkSGQUmJPV0c5vZomk/exec';
+
 async function submitReport() {
   if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
   if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
 
-  const submitBtn = document.querySelector('.btn-primary:last-of-type');
+  const submitBtn = document.querySelector('#screen-s4 .btn-primary');
+  const originalText = submitBtn.textContent;
   submitBtn.textContent = 'Отправляем...';
   submitBtn.disabled = true;
 
@@ -1198,22 +1202,30 @@ async function submitReport() {
     closing:        closing,
     calcBalance:    Math.round(calc),
     diff:           Math.round(diff),
-    verdict:        diff < 0 ? 'Недостача' : diff > 0 ? 'Излишек' : 'Сходится',
+    verdict:        diff < -1 ? 'Недостача' : diff > 1 ? 'Излишек' : 'Сходится', // Допуск 1 рубль на округление
     photos:         photoFiles.filter(f=>f!==null).length,
     comment:        document.getElementById('f-comment').value
   };
 
   try {
-    await fetch(APPS_SCRIPT_URL, {
+    const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Apps Script лучше принимает text/plain
+      body: JSON.stringify(data),
+      redirect: 'follow' // Обязательно для обработки редиректов Google
     });
-    go('screen-success');
+
+    const result = await response.json();
+    
+    if (result.ok) {
+      go('screen-success');
+    } else {
+      throw new Error(result.error || 'Неизвестная ошибка сервера');
+    }
   } catch (err) {
-    alert('Ошибка отправки. Проверьте интернет и попробуйте снова.');
-    submitBtn.textContent = 'Отправить отчёт ↗';
+    console.error('Ошибка отправки:', err);
+    alert('Ошибка отправки: ' + err.message + '\n\nПроверьте интернет или URL скрипта.');
+    submitBtn.textContent = originalText;
     submitBtn.disabled = false;
   }
 }
