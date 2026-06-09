@@ -1100,7 +1100,7 @@ function rmPhoto(idx) {
 }
 
 // ── Apps Script URL ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwCn4FWY_QLrvhAS-Vk3IQqDditM5WfHzlg4-GCHZzOhJ-PctPqUlDiLlXcrzTTVeY/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyxfQfPU_610ub_oLTv4x7-yBlLxKP5ecV0tuBypw2dM96es0VGmfDXsGUikJqeFaM/exec';
 
 // ── Collect suppliers data ──
 function collectSuppliers() {
@@ -1160,9 +1160,24 @@ async function submitReport() {
   if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
   if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
 
-  const submitBtn = document.querySelector('.btn-primary:last-of-type');
+  const submitBtn = document.querySelector('#screen-s4 .btn-primary');
   submitBtn.textContent = 'Отправляем...';
   submitBtn.disabled = true;
+
+  // Конвертируем фото в Base64
+  const photosBase64 = [];
+  for (const file of photoFiles) {
+    if (file) {
+      const base64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          resolve(reader.result.split(',')[1]); // убираем "data:image/jpeg;base64,"
+        };
+        reader.readAsDataURL(file);
+      });
+      photosBase64.push(base64);
+    }
+  }
 
   const invoices = collectInvoices();
   const totalInvoices = invoices['__total'] || 0;
@@ -1198,7 +1213,7 @@ async function submitReport() {
     calcBalance:    Math.round(calc),
     diff:           Math.round(diff),
     verdict:        diff < 0 ? 'Недостача' : diff > 0 ? 'Излишек' : 'Сходится',
-    photos:         photoFiles.filter(f=>f!==null).length,
+    photos:         photosBase64,
     comment:        document.getElementById('f-comment').value
   };
 
