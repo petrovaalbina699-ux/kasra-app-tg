@@ -1100,7 +1100,7 @@ function rmPhoto(idx) {
 }
 
 // ── Apps Script URL ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAt9LI7NkLNMpea1VJI_AWNMBccxFZlZ1EXCsVQETbKPvsGvyfCdpN-28P7_DcAeY/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCrg90nOL_x1CTvomQp2xeQADvp4l5wPvtQvX_ipaVCQ7mIL_8QBw9WF5GDjUByt8/exec';
 
 // ── Collect suppliers data ──
 function collectSuppliers() {
@@ -1156,28 +1156,63 @@ function collectInvoices() {
 }
 
 // ── Submit ──
+// ── Сжатие фото через canvas ──
+function compressImage(file, maxWidth = 1280, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Не удалось прочитать файл'));
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Не удалось загрузить изображение'));
+      img.onload = () => {
+        // Считаем новые размеры с сохранением пропорций
+        let { width, height } = img;
+        if (width > maxWidth) {
+          height = Math.round(height * maxWidth / width);
+          width = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        // Получаем base64 без префикса "data:image/jpeg;base64,"
+        const base64 = canvas.toDataURL('image/jpeg', quality).split(',')[1];
+        resolve(base64);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── Отправка отчёта ──
 async function submitReport() {
   if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
   if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
 
   const submitBtn = document.querySelector('#screen-s4 .btn-primary');
-  submitBtn.textContent = 'Отправляем...';
+  submitBtn.textContent = 'Сжимаем фото...';
   submitBtn.disabled = true;
 
-  // Конвертируем фото в Base64
+  // Сжимаем и конвертируем фото в Base64
   const photosBase64 = [];
-  for (const file of photoFiles) {
-    if (file) {
-      const base64 = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          resolve(reader.result.split(',')[1]); // убираем "data:image/jpeg;base64,"
-        };
-        reader.readAsDataURL(file);
-      });
+  try {
+    for (let i = 0; i < photoFiles.length; i++) {
+      const file = photoFiles[i];
+      if (!file) continue;
+      submitBtn.textContent = `Обработка фото ${i + 1}/${photoFiles.length}...`;
+      const base64 = await compressImage(file, 1280, 0.8);
       photosBase64.push(base64);
     }
+  } catch (err) {
+    alert('Ошибка обработки фото: ' + err.message);
+    submitBtn.textContent = 'Отправить отчёт ↗';
+    submitBtn.disabled = false;
+    return;
   }
+
+  submitBtn.textContent = 'Отправляем...';
 
   const invoices = collectInvoices();
   const totalInvoices = invoices['__total'] || 0;
@@ -1218,15 +1253,23 @@ async function submitReport() {
   };
 
   try {
-    await fetch(APPS_SCRIPT_URL, {
+    // ВАЖНО: убираем mode: 'no-cors' — он ломает Content-Type
+    const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // text/plain, чтобы избежать preflight CORS
       body: JSON.stringify(data)
     });
-    go('screen-success');
+    
+    // При no-cors ответ "opaque" и статуса нет. При обычном запросе — читаем ответ
+    const result = await response.json();
+    if (result.ok) {
+      go('screen-success');
+    } else {
+      throw new Error(result.error || 'Неизвестная ошибка сервера');
+    }
   } catch (err) {
-    alert('Ошибка отправки. Проверьте интернет и попробуйте снова.');
+    console.error('Ошибка отправки:', err);
+    alert('Ошибка отправки: ' + err.message);
     submitBtn.textContent = 'Отправить отчёт ↗';
     submitBtn.disabled = false;
   }
