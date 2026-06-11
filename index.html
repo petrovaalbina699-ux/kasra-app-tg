@@ -1141,7 +1141,7 @@ const formattedDate =
 document.getElementById('s1-date').value = formattedDate;
 
 // ── Apps Script URL ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwewvsbqkMi1_KSq1P3Zl2QuM8uLzezSOOliYtuNgvmaKr7XoU8xB-JhF0ZAu8Qzik/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby53O1DLYgUPdCb2xm6fNX6YOCcYsQdER1wjJFjPmtkC8sqReRDTes7jDzC0yycDws/exec';
 
 // ── Navigation ─
 function go(id) {
@@ -1506,6 +1506,10 @@ function collectInvoices() {
 
 // ── Submit report ──
 async function submitReport() {
+    if (!photoFiles || photoFiles.length === 0) {
+    alert('📸 Пожалуйста, загрузите фото накладных!\n\nБез фото отчёт не может быть отправлен.');
+    return; // Прерываем отправку
+  
   if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
   if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
 
