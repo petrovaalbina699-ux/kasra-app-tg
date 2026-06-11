@@ -1177,7 +1177,7 @@ function rmPhoto(idx) {
 }
 
 // ── Apps Script URL ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzohwiAWOlPZTwdc3F2LlKoTLBcjxT1V3wir39gL-Sdb8PbktEO_NCOorUwedV3UjM/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkynaQaQ8mbEHbzVflOSHzIMgJZadLqRbDPw-2rJrGYnuUnPNFTkyo63XhohmV_KA/exec';
 
 // ── Collect suppliers data ──
 function collectSuppliers() {
@@ -1397,6 +1397,565 @@ async function submitReport() {
     submitBtn.textContent = 'Отправить отчёт ↗';
   }
 }
+  // ── Справочник категорий и подкатегорий ──
+const CATEGORIES = {
+  '1.1 Продукты/Поставщики': ['Беркат','Океан','Филе','Фарш','Аддуми','Локали','Югпродукт','Шалифуд','Пекарня','Магазин','Другой поставщик'],
+  '1.2 Напитки': ['Напитки','Сиропы','Стом','Исаев','Инзаре'],
+  '1.3 Упаковка/Тара': ['Фортайм','Другой'],
+  '1.4 Персонал': ['Менеджер','Кассир','Сборка','Закупщик','Заготовщик','Повар','Техперсонал','Оператор','Курьер'],
+  '1.5 Комм. услуги': ['Электричество','Вода','Газ'],
+  '2.1 Эксплуатация точки': ['Производственное оборудование','Малая техника и аппараты','Мебель и оснащение','Инструменты и инвентарь','Услуги мастеров','Вывоз мусора (масла)','Вывоз масла','Хозка','Транспортный расход'],
+  '2.2 Сотрудничество и развитие': ['Сих-Сих','Ям','Курьер. услуги','Рекламный чек','Комплимент чек','Реклама и СММ (услуги)','Брендинг и дизайн'],
+  '2.3 Прочее': ['Сдача','Возврат','Проверка/проработка','Объявления и услуги','Разовые или непонятные платежи','Банк. комиссии'],
+  '3.1 Зарплата админ персонал': ['Управляющий Ахматов','Бухгалтер Альбина','Бухгалтер Седа','Менеджер доставок Адам','Маркетолог Им-Али','СММ Адам (Грозный)','СММ Амир (Шали)','Сторисмейкер (Грозный)','Сторисмейкер (Шали)','Инфлюенсер'],
+  '3.2 Аренда': ['Точка','Офис','Цех'],
+  '3.3 ИТ и связь': ['Айко Сервис','Фудпикас','Вайнах','АТС','Сервер'],
+  '3.4 Премии Бонусы KPI': [],
+  '3.5 Налог': [],
+  '3.6 Админ. разовый расход': [],
+  '4.1 Инкассация и прибыль': ['Буев','Рамзан','Инвестор'],
+  '4.2 Другое': [],
+  '4.5 Погашение долга': ['Локали','Югпродукт','Другой']
+};
+
+// Подкатегории, которые идут со знаком "+" (поступление/возврат)
+const PLUS_SUBCATS = ['Вывоз масла','Ям','Сдача','Возврат'];
+
+// ── Инициализация категорий при загрузке ──
+function initExpenseCategories() {
+  const catSelect = document.getElementById('oc-expense-category');
+  const moveCatSelect = document.getElementById('oc-move-expense-category');
+  
+  Object.keys(CATEGORIES).forEach(cat => {
+    const opt1 = document.createElement('option');
+    opt1.value = cat; opt1.textContent = cat;
+    catSelect.appendChild(opt1);
+    
+    const opt2 = document.createElement('option');
+    opt2.value = cat; opt2.textContent = cat;
+    moveCatSelect.appendChild(opt2);
+  });
+}
+
+// Запуск при загрузке страницы
+document.addEventListener('DOMContentLoaded', initExpenseCategories);
+
+// ── Обновление подкатегорий для обычного расхода ──
+function updateSubcats() {
+  const cat = document.getElementById('oc-expense-category').value;
+  const subSelect = document.getElementById('oc-expense-subcategory');
+  subSelect.innerHTML = '<option value="" disabled selected>Выберите...</option>';
+  
+  if (cat && CATEGORIES[cat]) {
+    if (CATEGORIES[cat].length === 0) {
+      // Нет подкатегорий — используем название категории
+      const opt = document.createElement('option');
+      opt.value = cat; opt.textContent = '(без подкатегории)';
+      subSelect.appendChild(opt);
+    } else {
+      CATEGORIES[cat].forEach(sub => {
+        const opt = document.createElement('option');
+        opt.value = sub; opt.textContent = sub;
+        subSelect.appendChild(opt);
+      });
+    }
+  }
+}
+
+// ── Обновление подкатегорий для перемещения ──
+function updateMoveSubcats() {
+  const cat = document.getElementById('oc-move-expense-category').value;
+  const subSelect = document.getElementById('oc-move-expense-subcategory');
+  subSelect.innerHTML = '<option value="" disabled selected>Выберите...</option>';
+  
+  if (cat && CATEGORIES[cat]) {
+    if (CATEGORIES[cat].length === 0) {
+      const opt = document.createElement('option');
+      opt.value = cat; opt.textContent = '(без подкатегории)';
+      subSelect.appendChild(opt);
+    } else {
+      CATEGORIES[cat].forEach(sub => {
+        const opt = document.createElement('option');
+        opt.value = sub; opt.textContent = sub;
+        subSelect.appendChild(opt);
+      });
+    }
+  }
+}
+
+// ── Список добавленных позиций расхода ──
+let expenseItems = [];
+
+function addExpenseItem() {
+  const cat = document.getElementById('oc-expense-category').value;
+  const sub = document.getElementById('oc-expense-subcategory').value;
+  const amount = parseFloat(document.getElementById('oc-expense-amount').value);
+  const comment = document.getElementById('oc-expense-comment').value.trim();
+  
+  if (!cat) { alert('Выберите категорию'); return; }
+  if (!sub) { alert('Выберите подкатегорию'); return; }
+  if (!amount || amount <= 0) { alert('Укажите сумму'); return; }
+  
+  // Определяем знак
+  const isPlus = PLUS_SUBCATS.includes(sub);
+  const sign = isPlus ? '+' : '-';
+  
+  expenseItems.push({
+    category: cat,
+    subcategory: sub,
+    amount: amount,
+    sign: sign,
+    comment: comment
+  });
+  
+  // Очищаем поля
+  document.getElementById('oc-expense-amount').value = '';
+  document.getElementById('oc-expense-comment').value = '';
+  document.getElementById('oc-expense-subcategory').value = '';
+  
+  renderExpenseItems();
+}
+
+function removeExpenseItem(idx) {
+  expenseItems.splice(idx, 1);
+  renderExpenseItems();
+}
+
+function renderExpenseItems() {
+  const list = document.getElementById('expense-items-list');
+  list.innerHTML = '';
+  
+  expenseItems.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'item-row';
+    div.style.cssText = 'background:#245E37;border:0.5px solid #3A7A4E;border-radius:12px;padding:10px 12px;margin-bottom:8px;';
+    
+    const signColor = item.sign === '+' ? '#4DC87A' : '#e05555';
+    
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+        <div style="flex:1;">
+          <div style="font-size:12px;color:#F5C518;font-weight:600;">${item.category}</div>
+          <div style="font-size:11px;color:#9FD4B8;margin-top:2px;">${item.subcategory}</div>
+          ${item.comment ? `<div style="font-size:11px;color:#7AB893;margin-top:4px;font-style:italic;">${item.comment}</div>` : ''}
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:14px;font-weight:600;color:${signColor};">${item.sign}${Math.round(item.amount).toLocaleString('ru')} ₽</div>
+          <button onclick="removeExpenseItem(${idx})" style="background:none;border:none;color:#e05555;font-size:12px;cursor:pointer;margin-top:4px;">Удалить</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  
+  document.getElementById('expense-count').textContent = expenseItems.length;
+}
+
+// ── Off Cash Photos ──
+let offCashPhotos = [];
+
+function handleOffCashPhotos(input) {
+  Array.from(input.files).forEach(file => {
+    const idx = offCashPhotos.length;
+    offCashPhotos.push(file);
+    const reader = new FileReader();
+    reader.onload = e => {
+      const grid = document.getElementById('oc-photo-grid');
+      const t = document.createElement('div');
+      t.className='photo-thumb'; t.id='oc-th-'+idx;
+      t.innerHTML=`<img src="${e.target.result}" alt="фото"><button class="photo-thumb-del" onclick="rmOffCashPhoto(${idx})">×</button>`;
+      grid.appendChild(t);
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+
+function rmOffCashPhoto(idx) {
+  offCashPhotos[idx]=null;
+  const t=document.getElementById('oc-th-'+idx); if(t) t.remove();
+}
+
+// ── Show Operation Type ─
+function showOperationType() {
+  const type = document.getElementById('oc-type').value;
+  document.querySelectorAll('.oc-section').forEach(s => s.style.display = 'none');
+  document.getElementById('move-expense-step').style.display = 'none';
+  
+  if (type === 'income') document.getElementById('oc-income').style.display = 'block';
+  else if (type === 'transfer') document.getElementById('oc-transfer').style.display = 'block';
+  else if (type === 'move') document.getElementById('oc-move').style.display = 'block';
+  else if (type === 'expense') document.getElementById('oc-expense').style.display = 'block';
+}
+
+// ── Показать шаг расхода внутри перемещения ──
+function showMoveExpense() {
+  const fromAccount = document.getElementById('oc-move-from-account').value;
+  const toLocation = document.getElementById('oc-move-to-location').value;
+  const amount = document.getElementById('oc-move-amount').value;
+  
+  if (!fromAccount || !toLocation || !amount) {
+    alert('Заполните счёт списания, точку назначения и сумму');
+    return;
+  }
+  
+  document.getElementById('move-expense-step').style.display = 'block';
+  document.getElementById('move-expense-step').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Submit Off Cash ──
+async function submitOffCash(type) {
+  const location = document.getElementById('oc-location').value;
+  if (!location) { alert('Выберите точку'); return; }
+  
+  const submitBtn = document.querySelector('#screen-off-cash .btn-primary:not([disabled])');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Отправка...';
+  }
+  
+  const data = {
+    type: 'off-cash',
+    operationType: type,
+    location: location,
+    timestamp: new Date().toISOString()
+  };
+  
+  if (type === 'income') {
+    data.account = document.getElementById('oc-income-account').value;
+    data.amount = parseFloat(document.getElementById('oc-income-amount').value);
+    if (!data.amount) { alert('Укажите сумму'); resetBtn(); return; }
+  }
+  
+  else if (type === 'transfer') {
+    data.fromAccount = document.getElementById('oc-transfer-from').value;
+    data.toAccount = document.getElementById('oc-transfer-to').value;
+    data.amount = parseFloat(document.getElementById('oc-transfer-amount').value);
+    data.comment = document.getElementById('oc-transfer-comment').value;
+    if (!data.fromAccount || !data.toAccount || !data.amount) { 
+      alert('Заполните все поля'); resetBtn(); return; 
+    }
+  }
+  
+  else if (type === 'move') {
+    data.fromAccount = document.getElementById('oc-move-from-account').value;
+    data.toLocation = document.getElementById('oc-move-to-location').value;
+    data.toAccount = 'долг';
+    data.amount = parseFloat(document.getElementById('oc-move-amount').value);
+    data.comment = document.getElementById('oc-move-comment').value;
+    
+    data.expenseCategory = document.getElementById('oc-move-expense-category').value;
+    data.expenseSubcategory = document.getElementById('oc-move-expense-subcategory').value;
+    data.expenseRecipient = document.getElementById('oc-move-expense-recipient').value;
+    data.expenseComment = document.getElementById('oc-move-expense-comment').value;
+    
+    if (!data.fromAccount || !data.toLocation || !data.amount) { 
+      alert('Заполните все поля перемещения'); resetBtn(); return; 
+    }
+    if (!data.expenseCategory || !data.expenseSubcategory) {
+      alert('Укажите категорию и подкатегорию расхода'); resetBtn(); return;
+    }
+  }
+  
+  else if (type === 'expense') {
+    data.account = document.getElementById('oc-expense-account').value;
+    if (!data.account) { alert('Выберите счет списания'); resetBtn(); return; }
+    if (expenseItems.length === 0) { alert('Добавьте хотя бы одну позицию'); resetBtn(); return; }
+    data.items = expenseItems;
+    
+    // Фото
+    if (offCashPhotos.length > 0) {
+      try {
+        const photosBase64 = [];
+        for (let i = 0; i < offCashPhotos.length; i++) {
+          if (offCashPhotos[i]) {
+            const base64 = await compressImage(offCashPhotos[i], 1280, 0.8);
+            photosBase64.push(base64);
+          }
+        }
+        data.photos = photosBase64;
+      } catch (err) {
+        console.error('Ошибка фото:', err);
+      }
+    }
+  }
+  
+  // Отправляем
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data)
+    });
+    
+    const result = await response.json();
+    if (result.ok) {
+      go('screen-off-cash-success');
+      // Сброс
+      offCashPhotos = [];
+      document.getElementById('oc-photo-grid').innerHTML = '';
+      document.getElementById('oc-type').value = '';
+      document.querySelectorAll('.oc-section').forEach(s => s.style.display = 'none');
+      expenseItems = [];
+      renderExpenseItems();
+    } else {
+      throw new Error(result.error || 'Ошибка');
+    }
+  } catch (err) {
+    alert('Ошибка отправки: ' + err.message);
+    resetBtn();
+  }
+  
+  function resetBtn() {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Отправить ↗';
+    }
+  }
+}
 </script>
+  <!-- ═══════════════════════════════ ВНЕ КАССЫ ═══════════════════════════════ -->
+<div id="screen-off-cash" class="screen">
+  <div class="top-bar">
+    <div class="back-btn" onclick="go('screen-home')">‹</div>
+    <div>
+      <div class="page-title">Расход вне кассы</div>
+      <div class="page-sub">Операции с деньгами</div>
+    </div>
+  </div>
+
+  <div class="sec-label">ВЫБЕРИТЕ ТОЧКУ</div>
+  <div class="field">
+    <select class="field-input" id="oc-location">
+      <option value="" disabled selected>Выберите точку...</option>
+      <option>Полярников</option>
+      <option>Садаева</option>
+      <option>Шали</option>
+    </select>
+  </div>
+
+  <div class="sec-label">ТИП ОПЕРАЦИИ</div>
+  <div class="field">
+    <select class="field-input" id="oc-type" onchange="showOperationType()">
+      <option value="" disabled selected>Выберите тип...</option>
+      <option value="expense">Расход</option>
+      <option value="income">Поступление</option>
+      <option value="transfer">Перевод между счетами</option>
+      <option value="move">Перемещение на другую точку</option>
+    </select>
+  </div>
+
+  <!-- ПОСТУПЛЕНИЕ -->
+  <div id="oc-income" class="oc-section" style="display:none;">
+    <div class="sec-label">ПОСТУПЛЕНИЕ</div>
+    <div class="field">
+      <div class="field-label">Счет зачисления</div>
+      <select class="field-input" id="oc-income-account">
+        <option value="расчетный счет" selected>Расчетный счет</option>
+        <option value="нал офис">Нал офис</option>
+        <option value="нал сейф">Нал сейф</option>
+        <option value="нал касса">Нал касса</option>
+        <option value="физ.карта">Физ.карта</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="field-label">Сумма</div>
+      <div class="amount-wrap">
+        <span class="rub-sign">₽</span>
+        <input class="field-input" type="number" id="oc-income-amount" placeholder="0">
+      </div>
+    </div>
+    <button class="btn-primary" onclick="submitOffCash('income')">Отправить ↗</button>
+  </div>
+
+  <!-- ПЕРЕВОД МЕЖДУ СЧЕТАМИ -->
+  <div id="oc-transfer" class="oc-section" style="display:none;">
+    <div class="sec-label">ПЕРЕВОД МЕЖДУ СЧЕТАМИ</div>
+    <div class="field">
+      <div class="field-label">С какого счета</div>
+      <select class="field-input" id="oc-transfer-from">
+        <option value="" disabled selected>Выберите...</option>
+        <option>нал офис</option>
+        <option>нал сейф</option>
+        <option>нал касса</option>
+        <option>расчетный счет</option>
+        <option>физ.карта</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="field-label">На какой счет</div>
+      <select class="field-input" id="oc-transfer-to">
+        <option value="" disabled selected>Выберите...</option>
+        <option>нал офис</option>
+        <option>нал сейф</option>
+        <option>нал касса</option>
+        <option>расчетный счет</option>
+        <option>физ.карта</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="field-label">Сумма</div>
+      <div class="amount-wrap">
+        <span class="rub-sign">₽</span>
+        <input class="field-input" type="number" id="oc-transfer-amount" placeholder="0">
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Комментарий</div>
+      <textarea class="field-input" rows="2" id="oc-transfer-comment" placeholder="Цель перевода..."></textarea>
+    </div>
+    <button class="btn-primary" onclick="submitOffCash('transfer')">Отправить </button>
+  </div>
+
+  <!-- ПЕРЕМЕЩЕНИЕ НА ДРУГУЮ ТОЧКУ -->
+  <div id="oc-move" class="oc-section" style="display:none;">
+    <div class="sec-label">ПЕРЕМЕЩЕНИЕ НА ДРУГУЮ ТОЧКУ</div>
+    <div class="field">
+      <div class="field-label">Счет списания</div>
+      <select class="field-input" id="oc-move-from-account">
+        <option value="" disabled selected>Выберите...</option>
+        <option>нал офис</option>
+        <option>нал сейф</option>
+        <option>нал касса</option>
+        <option>расчетный счет</option>
+        <option>физ.карта</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="field-label">Точка назначения</div>
+      <select class="field-input" id="oc-move-to-location">
+        <option value="" disabled selected>Выберите...</option>
+        <option>Полярников</option>
+        <option>Садаева</option>
+        <option>Шали</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="field-label">Счет поступления</div>
+      <input class="field-input" type="text" value="долг" readonly style="opacity:0.7;">
+    </div>
+    <div class="field">
+      <div class="field-label">Сумма</div>
+      <div class="amount-wrap">
+        <span class="rub-sign">₽</span>
+        <input class="field-input" type="number" id="oc-move-amount" placeholder="0">
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Комментарий к перемещению</div>
+      <textarea class="field-input" rows="2" id="oc-move-comment" placeholder="Причина перемещения..."></textarea>
+    </div>
+    <button class="btn-primary" onclick="showMoveExpense()">Далее → Указать расход</button>
+
+    <div id="move-expense-step" style="display:none; margin-top:20px;">
+      <div class="divider"></div>
+      <div class="sec-label">РАСХОД (куда пойдут деньги)</div>
+      <div class="field">
+        <div class="field-label">Категория расхода</div>
+        <select class="field-input" id="oc-move-expense-category" onchange="updateMoveSubcats()">
+          <option value="" disabled selected>Выберите...</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Подкатегория</div>
+        <select class="field-input" id="oc-move-expense-subcategory">
+          <option value="" disabled selected>Выберите...</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Получатель / Описание</div>
+        <input class="field-input" type="text" id="oc-move-expense-recipient" placeholder="Кому/за что...">
+      </div>
+      <div class="field">
+        <div class="field-label">Комментарий к расходу</div>
+        <textarea class="field-input" rows="2" id="oc-move-expense-comment" placeholder="Дополнительно..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="submitOffCash('move')">Отправить ↗</button>
+    </div>
+  </div>
+
+  <!-- РАСХОД (полная версия с категориями) -->
+  <div id="oc-expense" class="oc-section" style="display:none;">
+    <div class="sec-label">РАСХОД</div>
+
+    <div class="field">
+      <div class="field-label">Счет списания</div>
+      <select class="field-input" id="oc-expense-account">
+        <option value="" disabled selected>Выберите...</option>
+        <option>нал офис</option>
+        <option>нал сейф</option>
+        <option>нал касса</option>
+        <option>расчетный счет</option>
+        <option>физ.карта</option>
+      </select>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sec-label">ДОБАВЬТЕ ПОЗИЦИИ РАСХОДА</div>
+
+    <div class="field">
+      <div class="field-label">Категория</div>
+      <select class="field-input" id="oc-expense-category" onchange="updateSubcats()">
+        <option value="" disabled selected>Выберите категорию...</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Подкатегория</div>
+      <select class="field-input" id="oc-expense-subcategory">
+        <option value="" disabled selected>Сначала выберите категорию...</option>
+      </select>
+    </div>
+
+    <div class="row-2">
+      <div class="field">
+        <div class="field-label">Сумма</div>
+        <div class="amount-wrap">
+          <span class="rub-sign">₽</span>
+          <input class="field-input" type="number" id="oc-expense-amount" placeholder="0">
+        </div>
+      </div>
+      <div class="field" style="display:flex;align-items:flex-end;">
+        <button class="btn-primary" style="margin-top:0;padding:11px;" onclick="addExpenseItem()">+ Добавить</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Комментарий к позиции</div>
+      <textarea class="field-input" rows="2" id="oc-expense-comment" placeholder="Описание..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sec-label">ДОБАВЛЕННЫЕ ПОЗИЦИИ</div>
+    <div id="expense-items-list"></div>
+
+    <div class="total-bar" style="margin-top:14px;">
+      <span class="total-label">Итого позиций</span>
+      <span class="total-val" id="expense-count">0</span>
+    </div>
+
+    <div class="field" style="margin-top:14px;">
+      <div class="field-label">Фото чека (общее)</div>
+      <div class="photo-drop">
+        <input type="file" accept="image/*" multiple onchange="handleOffCashPhotos(this)">
+        <div class="photo-drop-icon">📷</div>
+        <div class="photo-drop-text">Нажмите чтобы добавить</div>
+      </div>
+      <div class="photo-grid" id="oc-photo-grid"></div>
+    </div>
+
+    <button class="btn-primary" onclick="submitOffCash('expense')">Отправить всё ↗</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SUCCESS OFF-CASH ═══════════════════════════════ -->
+<div id="screen-off-cash-success" class="screen">
+  <div class="success-wrap">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Операция записана!</div>
+    <div class="success-sub">Данные сохранены в таблицу.<br>Отчёт отправлен.</div>
+    <button class="btn-primary" style="margin-top:32px;" onclick="go('screen-home')">На главную</button>
+  </div>
+</div>
 </body>
 </html>
