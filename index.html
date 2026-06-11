@@ -343,7 +343,7 @@ textarea.field-input { resize: none; line-height: 1.5; }
     </div>
     <div class="field">
       <div class="field-label">Дата смены</div>
-      <input class="field-input" type="text" id="s1-date" placeholder="дд.мм.гггг">
+      <input class="field-input" type="date" id="s1-date">
     </div>
   </div>
 
@@ -1133,12 +1133,19 @@ const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
 // ── Today's date in DD.MM.YYYY format ──
+// ── Today's date in ISO format for date input ──
 const today = new Date();
-const formattedDate = 
-  String(today.getDate()).padStart(2,'0') + '.' +
-  String(today.getMonth()+1).padStart(2,'0') + '.' +
-  today.getFullYear();
-document.getElementById('s1-date').value = formattedDate;
+const isoDate = today.getFullYear() + '-' + 
+  String(today.getMonth()+1).padStart(2,'0') + '-' + 
+  String(today.getDate()).padStart(2,'0');
+document.getElementById('s1-date').value = isoDate;
+
+// ── Format date helper ──
+function formatDate(isoDate) {
+  if (!isoDate) return '';
+  const parts = isoDate.split('-');
+  return parts[2] + '.' + parts[1] + '.' + parts[0];
+}
 
 // ── Apps Script URL ──
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1i7_0IOYLK7IB0Oq-kn71MnelJVVHuNkodzx8MLwr_t7AS1z6RLHLYgpIxL5srJE/exec';
@@ -1197,7 +1204,7 @@ function resetAndGoHome() {
   submitBtn.disabled = false;
   submitBtn.textContent = 'Отправить отчёт ↗';
   
-  document.getElementById('s1-date').value = formattedDate;
+  document.getElementById('s1-date').value = isoDate;
   
   go('screen-home');
 }
@@ -1539,8 +1546,8 @@ async function submitReport() {
   const totalInvoices = invoices['__total'] || 0;
   delete invoices['__total'];
 
-  const dateParts = document.getElementById('s1-date').value.split('.');
-  const backendDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+  const isoDate = document.getElementById('s1-date').value;
+const displayDate = formatDate(isoDate);
 
   const opening  = parseFloat(document.getElementById('s1-opening').value) || 0;
   const revenue  = parseFloat(document.getElementById('f-revenue').value) || 0;
@@ -1560,8 +1567,8 @@ async function submitReport() {
 
   const data = {
     type:           'shift',
-    date:           backendDate,
-    displayDate:    document.getElementById('s1-date').value,
+    date:           displayDate,
+    displayDate:   displayDate,
     name:           document.getElementById('s1-name').value,
     location:       document.getElementById('s1-loc').value,
     opening:        opening,
