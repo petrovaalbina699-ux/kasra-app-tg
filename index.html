@@ -396,7 +396,6 @@ textarea.field-input { resize: none; line-height: 1.5; }
 
   <button class="btn-primary" onclick="nextS1()">Далее →</button>
 </div>
-
 <!-- ═══════════════════════════════ STEP 2 ═══════════════════════════════ -->
 <div id="screen-s2" class="screen">
   <div class="top-bar">
@@ -731,6 +730,7 @@ textarea.field-input { resize: none; line-height: 1.5; }
   <button class="btn-primary" onclick="go('screen-s3')">Далее →</button>
 </div>
 
+
 <!-- ═══════════════════════════════ STEP 3 ═══════════════════════════════ -->
 <div id="screen-s3" class="screen">
   <div class="top-bar">
@@ -1017,16 +1017,116 @@ function nextS1() {
 }
 
 // ── Expenses: category tabs ──
+
+// ── Expenses: category tabs ──
 function switchCat(cat) {
-  ['suppliers','drinks','packaging','other','salary'].forEach(c => {
-    document.getElementById('exp-'+c).classList.toggle('active', c===cat);
-  });
-  document.querySelectorAll('.cat-tab').forEach((t,i) => {
-    const cats = ['suppliers','drinks','packaging','other','salary'];
-    t.classList.toggle('active', cats[i]===cat);
+  document.querySelectorAll('.exp-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('exp-' + cat).classList.add('active');
+  
+  document.querySelectorAll('.cat-tab').forEach(tab => {
+    tab.classList.remove('active');
+    if (tab.getAttribute('onclick').includes(cat)) {
+      tab.classList.add('active');
+    }
   });
 }
 
+// ── Salary lines ──
+let salC = 0;
+function addSal(containerId, label) {
+  const id = 'sl-'+(++salC);
+  const c = document.getElementById(containerId);
+  const n = c.children.length + 1;
+  
+  const isOther = label === 'Другой сотрудник';
+  const extraField = isOther ? 
+    `<div style="margin-top:6px;"><input class="mini-input other-employee-name" type="text" placeholder="Укажите ФИО сотрудника (обязательно)" style="width:100%;"></div>` : 
+    '';
+  
+  const d = document.createElement('div');
+  d.className = 'salary-line'; d.id = id;
+  d.innerHTML = `<span class="salary-line-lbl">${label} #${n}</span>
+    <input class="mini-input" style="width:100px;text-align:right;" type="number" placeholder="0 ₽" oninput="calcExpenses()">
+    <button class="del-btn" onclick="document.getElementById('${id}').remove();calcExpenses()">×</button>
+    ${extraField}`;
+  c.appendChild(d);
+  
+  if (isOther) {
+    const nameInput = d.querySelector('.other-employee-name');
+    nameInput.addEventListener('input', function() {
+      this.style.borderColor = this.value.trim() ? '#3A7A4E' : '#e05555';
+    });
+  }
+}
+
+// ── Calc total expenses ──
+function calcExpenses() {
+  let t = 0;
+  document.querySelectorAll('#exp-payments .item-row.selected .inline-amount.show').forEach(i => {
+    t += parseFloat(i.value) || 0;
+  });
+  document.querySelectorAll('#exp-payments .item-expand.show input[type=number]').forEach(i => {
+    t += parseFloat(i.value) || 0;
+  });
+  document.querySelectorAll('#exp-salary .mini-input[type=number]').forEach(i => {
+    t += parseFloat(i.value) || 0;
+  });
+  document.getElementById('exp-total').textContent = Math.round(t).toLocaleString('ru') + ' ₽';
+  window._totalExpenses = t;
+}
+
+// ── Collect salary ──
+function collectSalary() {
+  const map = {};
+  let hasError = false;
+  
+  document.querySelectorAll('#exp-salary .salary-item').forEach(item => {
+    const title = item.querySelector('.salary-title').textContent.trim();
+    let total = 0;
+    let employeeNames = [];
+    
+    item.querySelectorAll('.salary-line').forEach(line => {
+      const amountInput = line.querySelector('input[type=number]');
+      const amount = parseFloat(amountInput?.value) || 0;
+      
+      if (amount > 0) {
+        total += amount;
+        
+        if (title === 'Другой сотрудник') {
+          const nameInput = line.querySelector('.other-employee-name');
+          const name = nameInput?.value.trim() || '';
+          
+          if (!name) {
+            if (nameInput) {
+              nameInput.style.borderColor = '#e05555';
+            }
+            hasError = true;
+          } else {
+            if (nameInput) {
+              nameInput.style.borderColor = '#3A7A4E';
+            }
+            employeeNames.push(name);
+          }
+        }
+      }
+    });
+    
+    if (total > 0) {
+      if (title === 'Другой сотрудник' && employeeNames.length > 0) {
+        map[title + ' (' + employeeNames.join(', ') + ')'] = total;
+      } else if (title !== 'Другой сотрудник') {
+        map[title] = total;
+      }
+    }
+  });
+  
+  if (hasError) {
+    alert('Пожалуйста, укажите ФИО для всех сотрудников в категории "Другой сотрудник"');
+    return null;
+  }
+  
+  return map;
+}
 // ── Accordion toggle ──
 function toggleAcc(id) {
   const body = document.getElementById(id);
@@ -1312,7 +1412,12 @@ async function submitReport() {
     openingComment: document.getElementById('s1-comment').value,
     suppliers:      collectSuppliers(),
     otherPayments:  collectOtherPayments(),
-    salary:         collectSalary(),
+    const salary = collectSalary();
+if (salary === null) {
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Отправить отчёт ↗';
+  return;
+}
     totalExpenses:  expenses,
     invoices:       invoices,
     totalInvoices:  totalInvoices,
