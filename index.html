@@ -1503,12 +1503,12 @@ function collectInvoices() {
   map['__total'] = total;
   return map;
 }
-
-// ── Submit report ──
 async function submitReport() {
-    if (!photoFiles || photoFiles.length === 0) {
+  // ✅ ПРОВЕРКА: Фото обязательны
+  if (!photoFiles || photoFiles.length === 0) {
     alert('📸 Пожалуйста, загрузите фото накладных!\n\nБез фото отчёт не может быть отправлен.');
-    return; // Прерываем отправку
+    return;
+  }  // ← ВОТ ЭТА СКОБКА БЫЛА ПРОПУЩЕНА!
   
   if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
   if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
@@ -1604,6 +1604,7 @@ async function submitReport() {
     submitBtn.textContent = 'Отправить отчёт ↗';
   }
 }
+// ── Submit report ──
 
 // ═══════════════════════════════ OFF-CASH FUNCTIONS ═══════════════════════════════
 
