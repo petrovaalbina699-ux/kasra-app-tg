@@ -78,6 +78,10 @@ textarea.field-input { resize: none; line-height: 1.5; }
   font-family: 'Montserrat', sans-serif; cursor: pointer; transition: opacity 0.15s;
 }
 .btn-primary:active { opacity: 0.85; }
+.btn-primary:disabled { 
+  opacity: 0.5; 
+  cursor: not-allowed; 
+}
 
 /* ── HOME MENU ── */
 .logo-area { text-align: center; margin-bottom: 36px; margin-top: 20px; }
@@ -107,6 +111,13 @@ textarea.field-input { resize: none; line-height: 1.5; }
 .menu-arrow { font-size: 16px; color: #3A7A4E; }
 
 /* ── EXPENSES: CAT TABS ── */
+.cat-tabs-wrap {
+  position: sticky;
+  top: 0;
+  background: #1B4D2E;
+  z-index: 100;
+  padding-bottom: 8px;
+}
 .cat-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
 .cat-tab {
   flex: 1; padding: 9px 4px; font-size: 11px; font-weight: 600;
@@ -305,10 +316,8 @@ textarea.field-input { resize: none; line-height: 1.5; }
 <div id="screen-home" class="screen active">
 <div class="logo-area">
   <div style="font-size: 52px; font-weight: 700; color: #F5C518; letter-spacing: 4px; margin-bottom: 8px; text-align: center;">KASRA</div>
-  <div style="font-size: 13px; color: #1B4D2E; letter-spacing: 3px; text-align: center; font-weight: 500;">arabian fastfood</div>
+  <div style="font-size: 13px; color: #7AB893; letter-spacing: 3px; text-align: center; font-weight: 500;">arabian fastfood</div>
 </div>
-  <div class="menu-label">МЕНЮ</div>
-  <div class="menu-divider"></div>
   <div class="menu-item" onclick="go('screen-s1')">
     <div class="menu-icon">📋</div>
     <div class="menu-text">
@@ -362,7 +371,7 @@ textarea.field-input { resize: none; line-height: 1.5; }
     </div>
     <div class="field">
       <div class="field-label">Дата смены</div>
-      <input class="field-input" type="date" id="s1-date">
+      <input class="field-input" type="text" id="s1-date" placeholder="дд.мм.гггг">
     </div>
   </div>
 
@@ -404,15 +413,16 @@ textarea.field-input { resize: none; line-height: 1.5; }
     <div class="step-dot"></div>
   </div>
 
-  <div class="cat-tabs">
-    <div class="cat-tab active" onclick="switchCat('suppliers')">Поставщики</div>
-    <div class="cat-tab" onclick="switchCat('other')">Прочая оплата</div>
-    <div class="cat-tab" onclick="switchCat('salary')">Зарплата</div>
+  <div class="cat-tabs-wrap">
+    <div class="cat-tabs">
+      <div class="cat-tab active" onclick="switchCat('payments')">Оплаты</div>
+      <div class="cat-tab" onclick="switchCat('salary')">Зарплата</div>
+    </div>
   </div>
 
-  <!-- ПОСТАВЩИКИ -->
-  <div id="exp-suppliers" class="exp-section active">
-    <div class="sec-label">ВЫБЕРИТЕ ПОСТАВЩИКОВ И СУММЫ</div>
+  <!-- ОПЛАТЫ -->
+  <div id="exp-payments" class="exp-section active">
+    <div class="sec-label">ВЫБЕРИТЕ КАТЕГОРИИ ОПЛАТ</div>
 
     <!-- ПРОДУКТЫ -->
     <div class="acc-group">
@@ -469,11 +479,6 @@ textarea.field-input { resize: none; line-height: 1.5; }
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- ПРОЧАЯ ОПЛАТА -->
-  <div id="exp-other" class="exp-section">
-    <div class="sec-label">ВЫБЕРИТЕ КАТЕГОРИИ</div>
 
     <!-- РАСХОДЫ ТОЧКИ -->
     <div class="acc-group">
@@ -907,7 +912,7 @@ textarea.field-input { resize: none; line-height: 1.5; }
   <textarea class="field-input" rows="3" id="f-comment" maxlength="500"
     placeholder="Причина недостачи, особые ситуации или любой комментарий..."></textarea>
 
-  <button class="btn-primary" onclick="submitReport()">Отправить отчёт ↗</button>
+  <button class="btn-primary" id="submit-btn" onclick="submitReport()">Отправить отчёт ↗</button>
 </div>
 
 <!-- ═══════════════════════════════ SUCCESS ═══════════════════════════════ -->
@@ -916,7 +921,7 @@ textarea.field-input { resize: none; line-height: 1.5; }
     <div class="success-icon">✅</div>
     <div class="success-title">Отчёт отправлен!</div>
     <div class="success-sub">Данные записаны в таблицу.<br>Спасибо за смену!</div>
-    <button class="btn-primary" style="margin-top:32px;" onclick="go('screen-home')">На главную</button>
+    <button class="btn-primary" style="margin-top:32px;" onclick="resetAndGoHome()">На главную</button>
   </div>
 </div>
 
@@ -925,18 +930,82 @@ textarea.field-input { resize: none; line-height: 1.5; }
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-// ── Today's date ──
+// ── Today's date in DD.MM.YYYY format ──
 const today = new Date();
-document.getElementById('s1-date').value =
-  today.getFullYear() + '-' +
-  String(today.getMonth()+1).padStart(2,'0') + '-' +
-  String(today.getDate()).padStart(2,'0');
+const formattedDate = 
+  String(today.getDate()).padStart(2,'0') + '.' +
+  String(today.getMonth()+1).padStart(2,'0') + '.' +
+  today.getFullYear();
+document.getElementById('s1-date').value = formattedDate;
 
 // ── Navigation ──
 function go(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+}
+
+// ── Reset and go home ──
+function resetAndGoHome() {
+  // Reset form
+  document.getElementById('s1-name').value = '';
+  document.getElementById('s1-loc').value = '';
+  document.getElementById('s1-opening').value = '';
+  document.getElementById('s1-comment').value = '';
+  document.getElementById('f-revenue').value = '';
+  document.getElementById('f-card').value = '';
+  document.getElementById('f-inkass').value = '';
+  document.getElementById('f-safe').value = '';
+  document.getElementById('f-closing').value = '';
+  document.getElementById('f-comment').value = '';
+  
+  // Reset photos
+  photoFiles = [];
+  document.getElementById('photo-grid').innerHTML = '';
+  
+  // Reset salary lines
+  document.querySelectorAll('.salary-lines').forEach(el => el.innerHTML = '');
+  
+  // Reset all checkboxes
+  document.querySelectorAll('.item-checkbox, .sup-row .item-checkbox').forEach(cb => {
+    cb.classList.remove('checked');
+    cb.textContent = '';
+  });
+  
+  // Reset selected rows
+  document.querySelectorAll('.item-row.selected, .sup-row.active').forEach(row => {
+    row.classList.remove('selected', 'active');
+  });
+  
+  // Hide all expanded sections
+  document.querySelectorAll('.item-expand.show, .inline-amount.show').forEach(el => {
+    el.classList.remove('show');
+  });
+  
+  // Clear all input values in expense sections
+  document.querySelectorAll('#exp-suppliers .inline-amount, #exp-other .mini-input').forEach(inp => {
+    inp.value = '';
+  });
+  
+  // Reset totals
+  document.getElementById('exp-total').textContent = '0 ₽';
+  document.getElementById('inv-total').textContent = '0 ₽';
+  window._totalExpenses = 0;
+  
+  // Reset verdict
+  document.getElementById('v-ned').classList.remove('show');
+  document.getElementById('v-izl').classList.remove('show');
+  document.getElementById('r-diff').textContent = '—';
+  
+  // Enable submit button
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Отправить отчёт ↗';
+  
+  // Set today's date
+  document.getElementById('s1-date').value = formattedDate;
+  
+  go('screen-home');
 }
 
 // ── Step 1 validation ──
@@ -949,11 +1018,12 @@ function nextS1() {
 
 // ── Expenses: category tabs ──
 function switchCat(cat) {
-  ['suppliers','other','salary'].forEach(c => {
+  ['suppliers','drinks','packaging','other','salary'].forEach(c => {
     document.getElementById('exp-'+c).classList.toggle('active', c===cat);
   });
   document.querySelectorAll('.cat-tab').forEach((t,i) => {
-    t.classList.toggle('active', ['suppliers','other','salary'][i]===cat);
+    const cats = ['suppliers','drinks','packaging','other','salary'];
+    t.classList.toggle('active', cats[i]===cat);
   });
 }
 
@@ -1013,6 +1083,8 @@ function addSal(containerId, label) {
 function calcExpenses() {
   let t = 0;
   document.querySelectorAll('#exp-suppliers .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
+  document.querySelectorAll('#exp-drinks .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
+  document.querySelectorAll('#exp-packaging .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
   document.querySelectorAll('#exp-other .item-expand.show input[type=number]').forEach(i => t += parseFloat(i.value)||0);
   document.querySelectorAll('#exp-salary .mini-input[type=number]').forEach(i => t += parseFloat(i.value)||0);
   document.getElementById('exp-total').textContent = Math.round(t).toLocaleString('ru') + ' ₽';
@@ -1155,8 +1227,7 @@ function collectInvoices() {
   return map;
 }
 
-// ── Submit ──
-// ── Сжатие фото через canvas ──
+// ── Compress image ──
 function compressImage(file, maxWidth = 1280, quality = 0.8) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -1165,7 +1236,6 @@ function compressImage(file, maxWidth = 1280, quality = 0.8) {
       const img = new Image();
       img.onerror = () => reject(new Error('Не удалось загрузить изображение'));
       img.onload = () => {
-        // Считаем новые размеры с сохранением пропорций
         let { width, height } = img;
         if (width > maxWidth) {
           height = Math.round(height * maxWidth / width);
@@ -1176,7 +1246,6 @@ function compressImage(file, maxWidth = 1280, quality = 0.8) {
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        // Получаем base64 без префикса "data:image/jpeg;base64,"
         const base64 = canvas.toDataURL('image/jpeg', quality).split(',')[1];
         resolve(base64);
       };
@@ -1186,16 +1255,18 @@ function compressImage(file, maxWidth = 1280, quality = 0.8) {
   });
 }
 
-// ── Отправка отчёта ──
+// ── Submit report ──
 async function submitReport() {
   if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
   if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
 
-  const submitBtn = document.querySelector('#screen-s4 .btn-primary');
-  submitBtn.textContent = 'Сжимаем фото...';
+  const submitBtn = document.getElementById('submit-btn');
+  
+  // Disable button to prevent multiple clicks
   submitBtn.disabled = true;
+  submitBtn.textContent = 'Обработка...';
 
-  // Сжимаем и конвертируем фото в Base64
+  // Compress and convert photos to Base64
   const photosBase64 = [];
   try {
     for (let i = 0; i < photoFiles.length; i++) {
@@ -1207,8 +1278,8 @@ async function submitReport() {
     }
   } catch (err) {
     alert('Ошибка обработки фото: ' + err.message);
-    submitBtn.textContent = 'Отправить отчёт ↗';
     submitBtn.disabled = false;
+    submitBtn.textContent = 'Отправить отчёт ↗';
     return;
   }
 
@@ -1217,6 +1288,10 @@ async function submitReport() {
   const invoices = collectInvoices();
   const totalInvoices = invoices['__total'] || 0;
   delete invoices['__total'];
+
+  // Parse date from DD.MM.YYYY to YYYY-MM-DD for backend
+  const dateParts = document.getElementById('s1-date').value.split('.');
+  const backendDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
 
   const opening  = parseFloat(document.getElementById('s1-opening').value) || 0;
   const revenue  = parseFloat(document.getElementById('f-revenue').value) || 0;
@@ -1229,7 +1304,8 @@ async function submitReport() {
 
   const data = {
     type:           'shift',
-    date:           document.getElementById('s1-date').value,
+    date:           backendDate,
+    displayDate:    document.getElementById('s1-date').value,
     name:           document.getElementById('s1-name').value,
     location:       document.getElementById('s1-loc').value,
     opening:        opening,
@@ -1253,14 +1329,12 @@ async function submitReport() {
   };
 
   try {
-    // ВАЖНО: убираем mode: 'no-cors' — он ломает Content-Type
     const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // text/plain, чтобы избежать preflight CORS
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(data)
     });
     
-    // При no-cors ответ "opaque" и статуса нет. При обычном запросе — читаем ответ
     const result = await response.json();
     if (result.ok) {
       go('screen-success');
@@ -1270,8 +1344,8 @@ async function submitReport() {
   } catch (err) {
     console.error('Ошибка отправки:', err);
     alert('Ошибка отправки: ' + err.message);
-    submitBtn.textContent = 'Отправить отчёт ↗';
     submitBtn.disabled = false;
+    submitBtn.textContent = 'Отправить отчёт ↗';
   }
 }
 </script>
