@@ -92,8 +92,6 @@ textarea.field-input { resize: none; line-height: 1.5; }
 }
 .logo-name { font-size: 28px; font-weight: 600; color: #F5C518; letter-spacing: 3px; }
 .logo-sub { font-size: 12px; color: #7AB893; margin-top: 4px; letter-spacing: 1px; }
-.menu-label { font-size: 11px; color: #7AB893; letter-spacing: 1.5px; margin-bottom: 12px; padding-left: 2px; }
-.menu-divider { height: 0.5px; background: #3A7A4E; margin-bottom: 16px; }
 .menu-item {
   background: #245E37; border: 0.5px solid #3A7A4E; border-radius: 16px;
   padding: 16px 18px; display: flex; align-items: center; gap: 14px;
@@ -396,6 +394,7 @@ textarea.field-input { resize: none; line-height: 1.5; }
 
   <button class="btn-primary" onclick="nextS1()">Далее →</button>
 </div>
+
 <!-- ═══════════════════════════════ STEP 2 ═══════════════════════════════ -->
 <div id="screen-s2" class="screen">
   <div class="top-bar">
@@ -730,7 +729,6 @@ textarea.field-input { resize: none; line-height: 1.5; }
   <button class="btn-primary" onclick="go('screen-s3')">Далее →</button>
 </div>
 
-
 <!-- ═══════════════════════════════ STEP 3 ═══════════════════════════════ -->
 <div id="screen-s3" class="screen">
   <div class="top-bar">
@@ -947,7 +945,6 @@ function go(id) {
 
 // ── Reset and go home ──
 function resetAndGoHome() {
-  // Reset form
   document.getElementById('s1-name').value = '';
   document.getElementById('s1-loc').value = '';
   document.getElementById('s1-opening').value = '';
@@ -959,50 +956,40 @@ function resetAndGoHome() {
   document.getElementById('f-closing').value = '';
   document.getElementById('f-comment').value = '';
   
-  // Reset photos
   photoFiles = [];
   document.getElementById('photo-grid').innerHTML = '';
   
-  // Reset salary lines
   document.querySelectorAll('.salary-lines').forEach(el => el.innerHTML = '');
   
-  // Reset all checkboxes
   document.querySelectorAll('.item-checkbox, .sup-row .item-checkbox').forEach(cb => {
     cb.classList.remove('checked');
     cb.textContent = '';
   });
   
-  // Reset selected rows
   document.querySelectorAll('.item-row.selected, .sup-row.active').forEach(row => {
     row.classList.remove('selected', 'active');
   });
   
-  // Hide all expanded sections
   document.querySelectorAll('.item-expand.show, .inline-amount.show').forEach(el => {
     el.classList.remove('show');
   });
   
-  // Clear all input values in expense sections
-  document.querySelectorAll('#exp-suppliers .inline-amount, #exp-other .mini-input').forEach(inp => {
+  document.querySelectorAll('#exp-payments .inline-amount, #exp-payments .mini-input').forEach(inp => {
     inp.value = '';
   });
   
-  // Reset totals
   document.getElementById('exp-total').textContent = '0 ₽';
   document.getElementById('inv-total').textContent = '0 ₽';
   window._totalExpenses = 0;
   
-  // Reset verdict
   document.getElementById('v-ned').classList.remove('show');
   document.getElementById('v-izl').classList.remove('show');
   document.getElementById('r-diff').textContent = '—';
   
-  // Enable submit button
   const submitBtn = document.getElementById('submit-btn');
   submitBtn.disabled = false;
   submitBtn.textContent = 'Отправить отчёт ↗';
   
-  // Set today's date
   document.getElementById('s1-date').value = formattedDate;
   
   go('screen-home');
@@ -1017,8 +1004,6 @@ function nextS1() {
 }
 
 // ── Expenses: category tabs ──
-
-// ── Expenses: category tabs ──
 function switchCat(cat) {
   document.querySelectorAll('.exp-section').forEach(s => s.classList.remove('active'));
   document.getElementById('exp-' + cat).classList.add('active');
@@ -1029,6 +1014,42 @@ function switchCat(cat) {
       tab.classList.add('active');
     }
   });
+}
+
+// ── Accordion toggle ──
+function toggleAcc(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById('arr-'+id);
+  const head = body.previousElementSibling;
+  const open = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+  if (head) head.classList.toggle('open', open);
+}
+
+// ── Toggle supplier with "other" comment field ──
+function toggleSup(id) {
+  const row = document.getElementById(id);
+  const cb = row.querySelector('.item-checkbox');
+  const inp = row.querySelector('.inline-amount');
+  const on = cb.classList.toggle('checked');
+  cb.textContent = on ? '✓' : '';
+  row.classList.toggle('selected', on);
+  inp.classList.toggle('show', on);
+  const exp = document.getElementById(id+'-exp');
+  if (exp) exp.classList.toggle('show', on);
+  if (!on) { inp.value=''; calcExpenses(); } else inp.focus();
+}
+
+// ── Toggle other checkbox ──
+function toggleOth(id) {
+  const row = document.getElementById(id);
+  const cb = row.querySelector('.item-checkbox');
+  const exp = document.getElementById(id+'-exp');
+  const on = cb.classList.toggle('checked');
+  cb.textContent = on ? '✓' : '';
+  row.classList.toggle('selected', on);
+  exp.classList.toggle('show', on);
+  if (!on) { exp.querySelectorAll('input').forEach(i=>i.value=''); calcExpenses(); }
 }
 
 // ── Salary lines ──
@@ -1071,122 +1092,6 @@ function calcExpenses() {
   document.querySelectorAll('#exp-salary .mini-input[type=number]').forEach(i => {
     t += parseFloat(i.value) || 0;
   });
-  document.getElementById('exp-total').textContent = Math.round(t).toLocaleString('ru') + ' ₽';
-  window._totalExpenses = t;
-}
-
-// ── Collect salary ──
-function collectSalary() {
-  const map = {};
-  let hasError = false;
-  
-  document.querySelectorAll('#exp-salary .salary-item').forEach(item => {
-    const title = item.querySelector('.salary-title').textContent.trim();
-    let total = 0;
-    let employeeNames = [];
-    
-    item.querySelectorAll('.salary-line').forEach(line => {
-      const amountInput = line.querySelector('input[type=number]');
-      const amount = parseFloat(amountInput?.value) || 0;
-      
-      if (amount > 0) {
-        total += amount;
-        
-        if (title === 'Другой сотрудник') {
-          const nameInput = line.querySelector('.other-employee-name');
-          const name = nameInput?.value.trim() || '';
-          
-          if (!name) {
-            if (nameInput) {
-              nameInput.style.borderColor = '#e05555';
-            }
-            hasError = true;
-          } else {
-            if (nameInput) {
-              nameInput.style.borderColor = '#3A7A4E';
-            }
-            employeeNames.push(name);
-          }
-        }
-      }
-    });
-    
-    if (total > 0) {
-      if (title === 'Другой сотрудник' && employeeNames.length > 0) {
-        map[title + ' (' + employeeNames.join(', ') + ')'] = total;
-      } else if (title !== 'Другой сотрудник') {
-        map[title] = total;
-      }
-    }
-  });
-  
-  if (hasError) {
-    alert('Пожалуйста, укажите ФИО для всех сотрудников в категории "Другой сотрудник"');
-    return null;
-  }
-  
-  return map;
-}
-// ── Accordion toggle ──
-function toggleAcc(id) {
-  const body = document.getElementById(id);
-  const arrow = document.getElementById('arr-'+id);
-  const head = body.previousElementSibling;
-  const open = body.classList.toggle('open');
-  arrow.classList.toggle('open', open);
-  if (head) head.classList.toggle('open', open);
-}
-
-// ── Toggle supplier with "other" comment field ──
-const supWithComment = ['sup-f9','sup-d6','sup-p2'];
-
-function toggleSup(id) {
-  const row = document.getElementById(id);
-  const cb = row.querySelector('.item-checkbox');
-  const inp = row.querySelector('.inline-amount');
-  const on = cb.classList.toggle('checked');
-  cb.textContent = on ? '✓' : '';
-  row.classList.toggle('selected', on);
-  inp.classList.toggle('show', on);
-  const exp = document.getElementById(id+'-exp');
-  if (exp) exp.classList.toggle('show', on);
-  if (!on) { inp.value=''; calcExpenses(); } else inp.focus();
-}
-
-// ── Toggle other checkbox ──
-function toggleOth(id) {
-  const row = document.getElementById(id);
-  const cb = row.querySelector('.item-checkbox');
-  const exp = document.getElementById(id+'-exp');
-  const on = cb.classList.toggle('checked');
-  cb.textContent = on ? '✓' : '';
-  row.classList.toggle('selected', on);
-  exp.classList.toggle('show', on);
-  if (!on) { exp.querySelectorAll('input').forEach(i=>i.value=''); calcExpenses(); }
-}
-
-// ── Salary lines ──
-
-function addSal(containerId, label) {
-  const id = 'sl-'+(++salC);
-  const c = document.getElementById(containerId);
-  const n = c.children.length + 1;
-  const d = document.createElement('div');
-  d.className = 'salary-line'; d.id = id;
-  d.innerHTML = `<span class="salary-line-lbl">${label} #${n}</span>
-    <input class="mini-input" style="width:100px;text-align:right;" type="number" placeholder="0 ₽" oninput="calcExpenses()">
-    <button class="del-btn" onclick="document.getElementById('${id}').remove();calcExpenses()">×</button>`;
-  c.appendChild(d);
-}
-
-// ── Calc total expenses ──
-function calcExpenses() {
-  let t = 0;
-  document.querySelectorAll('#exp-suppliers .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
-  document.querySelectorAll('#exp-drinks .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
-  document.querySelectorAll('#exp-packaging .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
-  document.querySelectorAll('#exp-other .item-expand.show input[type=number]').forEach(i => t += parseFloat(i.value)||0);
-  document.querySelectorAll('#exp-salary .mini-input[type=number]').forEach(i => t += parseFloat(i.value)||0);
   document.getElementById('exp-total').textContent = Math.round(t).toLocaleString('ru') + ' ₽';
   window._totalExpenses = t;
 }
@@ -1277,11 +1182,10 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCrg90nOL_x1CT
 // ── Collect suppliers data ──
 function collectSuppliers() {
   const map = {};
-  document.querySelectorAll('#exp-suppliers .item-row.selected').forEach(row => {
+  document.querySelectorAll('#exp-payments .item-row.selected').forEach(row => {
     const name = row.querySelector('.item-name').textContent.trim();
     const amount = parseFloat(row.querySelector('.inline-amount').value) || 0;
     map[name] = amount;
-    // "Другой" поставщик — имя из текстового поля
     const commentInp = row.querySelector('.item-expand input[type=text]');
     if (commentInp) map[name + ' (имя)'] = commentInp.value.trim();
   });
@@ -1291,7 +1195,7 @@ function collectSuppliers() {
 // ── Collect other payments ──
 function collectOtherPayments() {
   const map = {};
-  document.querySelectorAll('#exp-other .item-row.selected').forEach(row => {
+  document.querySelectorAll('#exp-payments .item-row.selected').forEach(row => {
     const name = row.querySelector('.item-name').textContent.trim();
     const amountInp = row.querySelector('.item-expand input[type=number]');
     const commentInp = row.querySelector('.item-expand input[type=text]');
@@ -1304,12 +1208,53 @@ function collectOtherPayments() {
 // ── Collect salary ──
 function collectSalary() {
   const map = {};
+  let hasError = false;
+  
   document.querySelectorAll('#exp-salary .salary-item').forEach(item => {
     const title = item.querySelector('.salary-title').textContent.trim();
     let total = 0;
-    item.querySelectorAll('.salary-line input[type=number]').forEach(i => total += parseFloat(i.value)||0);
-    if (total > 0) map[title] = total;
+    let employeeNames = [];
+    
+    item.querySelectorAll('.salary-line').forEach(line => {
+      const amountInput = line.querySelector('input[type=number]');
+      const amount = parseFloat(amountInput?.value) || 0;
+      
+      if (amount > 0) {
+        total += amount;
+        
+        if (title === 'Другой сотрудник') {
+          const nameInput = line.querySelector('.other-employee-name');
+          const name = nameInput?.value.trim() || '';
+          
+          if (!name) {
+            if (nameInput) {
+              nameInput.style.borderColor = '#e05555';
+            }
+            hasError = true;
+          } else {
+            if (nameInput) {
+              nameInput.style.borderColor = '#3A7A4E';
+            }
+            employeeNames.push(name);
+          }
+        }
+      }
+    });
+    
+    if (total > 0) {
+      if (title === 'Другой сотрудник' && employeeNames.length > 0) {
+        map[title + ' (' + employeeNames.join(', ') + ')'] = total;
+      } else if (title !== 'Другой сотрудник') {
+        map[title] = total;
+      }
+    }
   });
+  
+  if (hasError) {
+    alert('Пожалуйста, укажите ФИО для всех сотрудников в категории "Другой сотрудник"');
+    return null;
+  }
+  
   return map;
 }
 
@@ -1362,11 +1307,9 @@ async function submitReport() {
 
   const submitBtn = document.getElementById('submit-btn');
   
-  // Disable button to prevent multiple clicks
   submitBtn.disabled = true;
   submitBtn.textContent = 'Обработка...';
 
-  // Compress and convert photos to Base64
   const photosBase64 = [];
   try {
     for (let i = 0; i < photoFiles.length; i++) {
@@ -1389,7 +1332,6 @@ async function submitReport() {
   const totalInvoices = invoices['__total'] || 0;
   delete invoices['__total'];
 
-  // Parse date from DD.MM.YYYY to YYYY-MM-DD for backend
   const dateParts = document.getElementById('s1-date').value.split('.');
   const backendDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
 
@@ -1402,6 +1344,13 @@ async function submitReport() {
   const calc     = opening + revenue - expenses - card - inkass;
   const diff     = closing - calc;
 
+  const salary = collectSalary();
+  if (salary === null) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Отправить отчёт ↗';
+    return;
+  }
+
   const data = {
     type:           'shift',
     date:           backendDate,
@@ -1412,12 +1361,7 @@ async function submitReport() {
     openingComment: document.getElementById('s1-comment').value,
     suppliers:      collectSuppliers(),
     otherPayments:  collectOtherPayments(),
-    const salary = collectSalary();
-if (salary === null) {
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Отправить отчёт ↗';
-  return;
-}
+    salary:         salary,
     totalExpenses:  expenses,
     invoices:       invoices,
     totalInvoices:  totalInvoices,
