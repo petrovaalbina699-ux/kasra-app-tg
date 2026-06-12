@@ -1148,7 +1148,7 @@ function formatDate(isoDate) {
 }
 
 // ── Apps Script URL ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1i7_0IOYLK7IB0Oq-kn71MnelJVVHuNkodzx8MLwr_t7AS1z6RLHLYgpIxL5srJE/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw946S6YQBiQbhCbrOq1OtNgefZ0PeHPmQBwLQgrjiwusF_WitEBPEHdgjefOgUVFg/exec';
 
 // ── Navigation ─
 function go(id) {
@@ -1513,41 +1513,24 @@ function collectInvoices() {
 async function submitReport() {
   // ✅ ПРОВЕРКА: Фото обязательны
   if (!photoFiles || photoFiles.length === 0) {
-    alert('📸 Пожалуйста, загрузите фото накладных!\n\nБез фото отчёт не может быть отправлен.');
+    alert(' Пожалуйста, загрузите фото накладных!\n\nБез фото отчёт не может быть отправлен.');
     return;
-  }  // ← ВОТ ЭТА СКОБКА БЫЛА ПРОПУЩЕНА!
+  }
   
   if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
   if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
 
   const submitBtn = document.getElementById('submit-btn');
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Обработка...';
+  submitBtn.textContent = 'Подготовка данных...';
 
-  const photosBase64 = [];
-  try {
-    for (let i = 0; i < photoFiles.length; i++) {
-      const file = photoFiles[i];
-      if (!file) continue;
-      submitBtn.textContent = `Обработка фото ${i + 1}/${photoFiles.length}...`;
-      const base64 = await compressImage(file, 1280, 0.8);
-      photosBase64.push(base64);
-    }
-  } catch (err) {
-    alert('Ошибка обработки фото: ' + err.message);
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Отправить отчёт ↗';
-    return;
-  }
-
-  submitBtn.textContent = 'Отправляем...';
-
+  // Собираем основные данные БЕЗ фото
   const invoices = collectInvoices();
   const totalInvoices = invoices['__total'] || 0;
   delete invoices['__total'];
 
-  const isoDate = document.getElementById('s1-date').value;
-const displayDate = formatDate(isoDate);
+  const dateParts = document.getElementById('s1-date').value.split('.');
+  const backendDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
 
   const opening  = parseFloat(document.getElementById('s1-opening').value) || 0;
   const revenue  = parseFloat(document.getElementById('f-revenue').value) || 0;
@@ -1567,8 +1550,8 @@ const displayDate = formatDate(isoDate);
 
   const data = {
     type:           'shift',
-    date:           displayDate,
-    displayDate:   displayDate,
+    date:           backendDate,
+    displayDate:    document.getElementById('s1-date').value,
     name:           document.getElementById('s1-name').value,
     location:       document.getElementById('s1-loc').value,
     opening:        opening,
@@ -1587,11 +1570,16 @@ const displayDate = formatDate(isoDate);
     calcBalance:    Math.round(calc),
     diff:           Math.round(diff),
     verdict:        diff < 0 ? 'Недостача' : diff > 0 ? 'Излишек' : 'Сходится',
-    photos:         photosBase64,
+    photos:         [], // ← ПУСТОЙ МАССИВ, фото отправим отдельно
+    photoCount:     photoFiles.length, // ← Количество фото для информации
     comment:        document.getElementById('f-comment').value
   };
 
   try {
+    // ШАГ 1: Отправляем основные данные БЕЗ фото
+    submitBtn.textContent = 'Отправка отчёта...';
+    console.log('📤 Отправляем основные данные...');
+    
     const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -1599,13 +1587,62 @@ const displayDate = formatDate(isoDate);
     });
     
     const result = await response.json();
-    if (result.ok) {
-      go('screen-success');
-    } else {
-      throw new Error(result.error || 'Неизвестная ошибка сервера');
+    
+    if (!result.ok) {
+      throw new Error(result.error || 'Ошибка сервера');
     }
+    
+    console.log('✅ Основные данные отправлены');
+    
+    // ШАГ 2: Отправляем фото по одному
+    if (photoFiles.length > 0) {
+      submitBtn.textContent = `Отправка фото 0/${photoFiles.length}...`;
+      
+      for (let i = 0; i < photoFiles.length; i++) {
+        const file = photoFiles[i];
+        if (!file) continue;
+        
+        submitBtn.textContent = `Отправка фото ${i + 1}/${photoFiles.length}...`;
+        console.log(`📸 Отправляем фото ${i + 1}/${photoFiles.length}`);
+        
+        try {
+          // Сжимаем фото
+          const base64 = await compressImage(file, 800, 0.6);
+          
+          // Отправляем одно фото
+          const photoData = {
+            type: 'photo',
+            reportId: result.reportId || data.date + '_' + data.name,
+            photoIndex: i,
+            photoBase64: base64,
+            location: data.location,
+            name: data.name,
+            date: data.displayDate
+          };
+          
+          await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(photoData)
+          });
+          
+          console.log(`✅ Фото ${i + 1} отправлено`);
+          
+        } catch (photoErr) {
+          console.error(`❌ Ошибка фото ${i + 1}:`, photoErr);
+          // Продолжаем с остальными фото
+        }
+        
+        // Небольшая пауза между фото
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+    }
+    
+    console.log('🎉 Все данные отправлены!');
+    go('screen-success');
+    
   } catch (err) {
-    console.error('Ошибка отправки:', err);
+    console.error('❌ Ошибка отправки:', err);
     alert('Ошибка отправки: ' + err.message);
     submitBtn.disabled = false;
     submitBtn.textContent = 'Отправить отчёт ↗';
