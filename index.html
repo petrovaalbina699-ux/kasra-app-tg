@@ -1148,7 +1148,7 @@ function formatDate(isoDate) {
 }
 
 // ── Apps Script URL ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw946S6YQBiQbhCbrOq1OtNgefZ0PeHPmQBwLQgrjiwusF_WitEBPEHdgjefOgUVFg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMXeQe8eju5xqnKin8003phAD41785jAQpjc8OzM072x8mnMYs6oiCVfJxu13073o/exec';
 
 // ── Navigation ─
 function go(id) {
@@ -1529,10 +1529,24 @@ async function submitReport() {
   const totalInvoices = invoices['__total'] || 0;
   delete invoices['__total'];
 
-  const dateParts = document.getElementById('s1-date').value.split('.');
-  const backendDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+  // ✅ ИСПРАВЛЕНИЕ: Правильная обработка даты
+  const dateValue = document.getElementById('s1-date').value;
+  let backendDate, displayDate;
+  
+  if (dateValue.includes('-')) {
+    // ISO формат: "2026-06-13"
+    const parts = dateValue.split('-');
+    backendDate = dateValue;  // Уже в правильном формате
+    displayDate = parts[2] + '.' + parts[1] + '.' + parts[0];  // "13.06.2026"
+  } else {
+    // Старый формат: "13.06.2026"
+    const parts = dateValue.split('.');
+    backendDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+    displayDate = dateValue;
+  }
 
   const opening  = parseFloat(document.getElementById('s1-opening').value) || 0;
+const invoices = collectInvoices();
   const revenue  = parseFloat(document.getElementById('f-revenue').value) || 0;
   const card     = parseFloat(document.getElementById('f-card').value) || 0;
   const inkass   = parseFloat(document.getElementById('f-inkass').value) || 0;
@@ -1551,7 +1565,7 @@ async function submitReport() {
   const data = {
     type:           'shift',
     date:           backendDate,
-    displayDate:    document.getElementById('s1-date').value,
+    displayDate:    displayDate,
     name:           document.getElementById('s1-name').value,
     location:       document.getElementById('s1-loc').value,
     opening:        opening,
