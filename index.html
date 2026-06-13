@@ -72,13 +72,6 @@ textarea.field-input { resize: none; line-height: 1.5; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .logo-area { text-align: center; margin-bottom: 36px; margin-top: 20px; }
-.logo-icon {
-  width: 72px; height: 72px; border-radius: 20px;
-  background: #F5C518; display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 14px; font-size: 32px; color: #1B4D2E;
-}
-.logo-name { font-size: 28px; font-weight: 600; color: #F5C518; letter-spacing: 3px; }
-.logo-sub { font-size: 12px; color: #7AB893; margin-top: 4px; letter-spacing: 1px; }
 
 .menu-item {
   background: #245E37; border: 0.5px solid #3A7A4E; border-radius: 16px;
@@ -174,8 +167,8 @@ textarea.field-input { resize: none; line-height: 1.5; }
   font-family: 'Montserrat', sans-serif;
 }
 .salary-lines { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
-.salary-line { display: flex; align-items: center; gap: 8px; }
-.salary-line-lbl { font-size: 12px; color: #7AB893; flex: 1; }
+.salary-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.salary-line-lbl { font-size: 12px; color: #7AB893; flex: 1; min-width: 80px; }
 .del-btn {
   width: 26px; height: 26px; border-radius: 7px;
   background: rgba(220,60,60,0.12); border: none;
@@ -278,6 +271,8 @@ textarea.field-input { resize: none; line-height: 1.5; }
 .success-icon { font-size: 56px; color: #4DC87A; margin-bottom: 16px; }
 .success-title { font-size: 20px; font-weight: 600; color: #F5C518; margin-bottom: 8px; }
 .success-sub { font-size: 14px; color: #7AB893; line-height: 1.6; }
+
+.char-count { font-size: 11px; color: #4A8860; text-align: right; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -623,66 +618,39 @@ textarea.field-input { resize: none; line-height: 1.5; }
   <div id="exp-salary" class="exp-section">
     <div class="sec-label">ДОБАВЬТЕ ВЫПЛАТЫ ПО ПОЗИЦИЯМ</div>
     <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Менеджер</span>
-        <button class="add-line-btn" onclick="addSal('sal-manager','Менеджер')">+ Добавить</button>
-      </div>
+      <div class="salary-head"><span class="salary-title">Менеджер</span><button class="add-line-btn" onclick="addSal('sal-manager','Менеджер')">+ Добавить</button></div>
       <div class="salary-lines" id="sal-manager"></div>
     </div>
     <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Кассир</span>
-        <button class="add-line-btn" onclick="addSal('sal-cashier','Кассир')">+ Добавить</button>
-      </div>
+      <div class="salary-head"><span class="salary-title">Кассир</span><button class="add-line-btn" onclick="addSal('sal-cashier','Кассир')">+ Добавить</button></div>
       <div class="salary-lines" id="sal-cashier"></div>
     </div>
     <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Сборка / Раздача</span>
-        <button class="add-line-btn" onclick="addSal('sal-assembly','Сборка / Раздача')">+ Добавить</button>
-      </div>
+      <div class="salary-head"><span class="salary-title">Сборка / Раздача</span><button class="add-line-btn" onclick="addSal('sal-assembly','Сборка / Раздача')">+ Добавить</button></div>
       <div class="salary-lines" id="sal-assembly"></div>
     </div>
     <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Закупщик</span>
-        <button class="add-line-btn" onclick="addSal('sal-buyer','Закупщик')">+ Добавить</button>
-      </div>
+      <div class="salary-head"><span class="salary-title">Закупщик</span><button class="add-line-btn" onclick="addSal('sal-buyer','Закупщик')">+ Добавить</button></div>
       <div class="salary-lines" id="sal-buyer"></div>
     </div>
     <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Заготовщик</span>
-        <button class="add-line-btn" onclick="addSal('sal-prep','Заготовщик')">+ Добавить</button>
-      </div>
+      <div class="salary-head"><span class="salary-title">Заготовщик</span><button class="add-line-btn" onclick="addSal('sal-prep','Заготовщик')">+ Добавить</button></div>
       <div class="salary-lines" id="sal-prep"></div>
     </div>
     <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Повар</span>
-        <button class="add-line-btn" onclick="addSal('sal-cook','Повар')">+ Добавить</button>
-      </div>
+      <div class="salary-head"><span class="salary-title">Повар</span><button class="add-line-btn" onclick="addSal('sal-cook','Повар')">+ Добавить</button></div>
       <div class="salary-lines" id="sal-cook"></div>
     </div>
     <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Техперсонал</span>
-        <button class="add-line-btn" onclick="addSal('sal-tech','Техперсонал')">+ Добавить</button>
-      </div>
+      <div class="salary-head"><span class="salary-title">Техперсонал</span><button class="add-line-btn" onclick="addSal('sal-tech','Техперсонал')">+ Добавить</button></div>
       <div class="salary-lines" id="sal-tech"></div>
     </div>
     <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Курьер</span>
-        <button class="add-line-btn" onclick="addSal('sal-courier','Курьер')">+ Добавить</button>
-      </div>
+      <div class="salary-head"><span class="salary-title">Курьер</span><button class="add-line-btn" onclick="addSal('sal-courier','Курьер')">+ Добавить</button></div>
       <div class="salary-lines" id="sal-courier"></div>
     </div>
     <div class="salary-item">
-      <div class="salary-head">
-        <span class="salary-title">Другой сотрудник</span>
-        <button class="add-line-btn" onclick="addSal('sal-other','Другой сотрудник')">+ Добавить</button>
-      </div>
+      <div class="salary-head"><span class="salary-title">Другой сотрудник</span><button class="add-line-btn" onclick="addSal('sal-other','Другой сотрудник')">+ Добавить</button></div>
       <div class="salary-lines" id="sal-other"></div>
     </div>
   </div>
@@ -713,76 +681,20 @@ textarea.field-input { resize: none; line-height: 1.5; }
 
   <div class="sec-label">ОТМЕТЬТЕ ПОСТАВЩИКОВ С ЗАДОЛЖЕННОСТЬЮ</div>
 
-  <div class="sup-row" id="inv-f8">
-    <div class="item-checkbox" onclick="toggleInv('inv-f8')"></div>
-    <span class="sup-name">Локали</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-f7">
-    <div class="item-checkbox" onclick="toggleInv('inv-f7')"></div>
-    <span class="sup-name">Югпродукт</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-f6">
-    <div class="item-checkbox" onclick="toggleInv('inv-f6')"></div>
-    <span class="sup-name">Шалифуд</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-f1">
-    <div class="item-checkbox" onclick="toggleInv('inv-f1')"></div>
-    <span class="sup-name">Рынок (Беркат)</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-f2">
-    <div class="item-checkbox" onclick="toggleInv('inv-f2')"></div>
-    <span class="sup-name">Филе</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-f3">
-    <div class="item-checkbox" onclick="toggleInv('inv-f3')"></div>
-    <span class="sup-name">Фарш</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-f4">
-    <div class="item-checkbox" onclick="toggleInv('inv-f4')"></div>
-    <span class="sup-name">Океан</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-f5">
-    <div class="item-checkbox" onclick="toggleInv('inv-f5')"></div>
-    <span class="sup-name">Аддуми</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-d1">
-    <div class="item-checkbox" onclick="toggleInv('inv-d1')"></div>
-    <span class="sup-name">Напитки Арби/Беслан</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-d2">
-    <div class="item-checkbox" onclick="toggleInv('inv-d2')"></div>
-    <span class="sup-name">Сиропы</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-d3">
-    <div class="item-checkbox" onclick="toggleInv('inv-d3')"></div>
-    <span class="sup-name">Стом</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-d4">
-    <div class="item-checkbox" onclick="toggleInv('inv-d4')"></div>
-    <span class="sup-name">Исаев</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-d5">
-    <div class="item-checkbox" onclick="toggleInv('inv-d5')"></div>
-    <span class="sup-name">Инзаре</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
-  <div class="sup-row" id="inv-p1">
-    <div class="item-checkbox" onclick="toggleInv('inv-p1')"></div>
-    <span class="sup-name">Фортайм</span>
-    <input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()">
-  </div>
+  <div class="sup-row" id="inv-f8"><div class="item-checkbox" onclick="toggleInv('inv-f8')"></div><span class="sup-name">Локали</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f7"><div class="item-checkbox" onclick="toggleInv('inv-f7')"></div><span class="sup-name">Югпродукт</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f6"><div class="item-checkbox" onclick="toggleInv('inv-f6')"></div><span class="sup-name">Шалифуд</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f1"><div class="item-checkbox" onclick="toggleInv('inv-f1')"></div><span class="sup-name">Рынок (Беркат)</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f2"><div class="item-checkbox" onclick="toggleInv('inv-f2')"></div><span class="sup-name">Филе</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f3"><div class="item-checkbox" onclick="toggleInv('inv-f3')"></div><span class="sup-name">Фарш</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f4"><div class="item-checkbox" onclick="toggleInv('inv-f4')"></div><span class="sup-name">Океан</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f5"><div class="item-checkbox" onclick="toggleInv('inv-f5')"></div><span class="sup-name">Аддуми</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-d1"><div class="item-checkbox" onclick="toggleInv('inv-d1')"></div><span class="sup-name">Напитки Арби/Беслан</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-d2"><div class="item-checkbox" onclick="toggleInv('inv-d2')"></div><span class="sup-name">Сиропы</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-d3"><div class="item-checkbox" onclick="toggleInv('inv-d3')"></div><span class="sup-name">Стом</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-d4"><div class="item-checkbox" onclick="toggleInv('inv-d4')"></div><span class="sup-name">Исаев</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-d5"><div class="item-checkbox" onclick="toggleInv('inv-d5')"></div><span class="sup-name">Инзаре</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-p1"><div class="item-checkbox" onclick="toggleInv('inv-p1')"></div><span class="sup-name">Фортайм</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
 
   <div class="total-bar">
     <span class="total-label">Итого задолженность</span>
@@ -864,8 +776,8 @@ textarea.field-input { resize: none; line-height: 1.5; }
 
   <div class="divider"></div>
   <div class="sec-label">ФОТО НАКЛАДНЫХ</div>
-  <div class="photo-drop">
-    <input type="file" accept="image/*" multiple onchange="handlePhotos(this)">
+  <div class="photo-drop" id="photo-drop-area">
+    <input type="file" accept="image/*" multiple onchange="handlePhotos(this)" id="photo-input">
     <div class="photo-drop-icon">📷</div>
     <div class="photo-drop-text">Нажмите чтобы добавить фото</div>
     <div class="photo-drop-hint">Можно выбрать несколько сразу</div>
@@ -948,22 +860,16 @@ textarea.field-input { resize: none; line-height: 1.5; }
       <div class="field-label">С какого счета</div>
       <select class="field-input" id="oc-transfer-from">
         <option value="" disabled selected>Выберите...</option>
-        <option>нал офис</option>
-        <option>нал сейф</option>
-        <option>нал касса</option>
-        <option>расчетный счет</option>
-        <option>физ.карта</option>
+        <option>нал офис</option><option>нал сейф</option><option>нал касса</option>
+        <option>расчетный счет</option><option>физ.карта</option>
       </select>
     </div>
     <div class="field">
       <div class="field-label">На какой счет</div>
       <select class="field-input" id="oc-transfer-to">
         <option value="" disabled selected>Выберите...</option>
-        <option>нал офис</option>
-        <option>нал сейф</option>
-        <option>нал касса</option>
-        <option>расчетный счет</option>
-        <option>физ.карта</option>
+        <option>нал офис</option><option>нал сейф</option><option>нал касса</option>
+        <option>расчетный счет</option><option>физ.карта</option>
       </select>
     </div>
     <div class="field">
@@ -986,20 +892,15 @@ textarea.field-input { resize: none; line-height: 1.5; }
       <div class="field-label">Счет списания</div>
       <select class="field-input" id="oc-move-from-account">
         <option value="" disabled selected>Выберите...</option>
-        <option>нал офис</option>
-        <option>нал сейф</option>
-        <option>нал касса</option>
-        <option>расчетный счет</option>
-        <option>физ.карта</option>
+        <option>нал офис</option><option>нал сейф</option><option>нал касса</option>
+        <option>расчетный счет</option><option>физ.карта</option>
       </select>
     </div>
     <div class="field">
       <div class="field-label">Точка назначения</div>
       <select class="field-input" id="oc-move-to-location">
         <option value="" disabled selected>Выберите...</option>
-        <option>Полярников</option>
-        <option>Садаева</option>
-        <option>Шали</option>
+        <option>Полярников</option><option>Садаева</option><option>Шали</option>
       </select>
     </div>
     <div class="field">
@@ -1052,11 +953,8 @@ textarea.field-input { resize: none; line-height: 1.5; }
       <div class="field-label">Счет списания</div>
       <select class="field-input" id="oc-expense-account">
         <option value="" disabled selected>Выберите...</option>
-        <option>нал офис</option>
-        <option>нал сейф</option>
-        <option>нал касса</option>
-        <option>расчетный счет</option>
-        <option>физ.карта</option>
+        <option>нал офис</option><option>нал сейф</option><option>нал касса</option>
+        <option>расчетный счет</option><option>физ.карта</option>
       </select>
     </div>
 
@@ -1069,7 +967,6 @@ textarea.field-input { resize: none; line-height: 1.5; }
         <option value="" disabled selected>Выберите категорию...</option>
       </select>
     </div>
-
     <div class="field">
       <div class="field-label">Подкатегория</div>
       <select class="field-input" id="oc-expense-subcategory">
@@ -1132,80 +1029,77 @@ textarea.field-input { resize: none; line-height: 1.5; }
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-// ── Today's date in DD.MM.YYYY format ──
-// ── Today's date in ISO format for date input ──
+// ── Apps Script URL ──
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtRksiM0gp9lOiZC1wdmiRsA0CxdKzqvXJPe7nhjCubWdj1oTs4RBzL14KG-34om8/exec';
+
+// ── Today's date ──
 const today = new Date();
-const isoDate = today.getFullYear() + '-' + 
-  String(today.getMonth()+1).padStart(2,'0') + '-' + 
-  String(today.getDate()).padStart(2,'0');
+const isoDate = today.getFullYear() + '-' +
+  String(today.getMonth() + 1).padStart(2, '0') + '-' +
+  String(today.getDate()).padStart(2, '0');
 document.getElementById('s1-date').value = isoDate;
 
-// ── Format date helper ──
-function formatDate(isoDate) {
-  if (!isoDate) return '';
-  const parts = isoDate.split('-');
-  return parts[2] + '.' + parts[1] + '.' + parts[0];
+// ── Helpers ──
+function formatDate(iso) {
+  if (!iso) return '';
+  const p = iso.split('-');
+  return p[2] + '.' + p[1] + '.' + p[0];
 }
 
-// ── Apps Script URL ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMXeQe8eju5xqnKin8003phAD41785jAQpjc8OzM072x8mnMYs6oiCVfJxu13073o/exec';
-
-// ── Navigation ─
+// ── Navigation ──
 function go(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
-// ── Reset and go home ──
+// ── Reset ──
 function resetAndGoHome() {
   document.getElementById('s1-name').value = '';
-  document.getElementById('s1-loc').value = '';
+  document.getElementById('s1-loc').selectedIndex = 0;
   document.getElementById('s1-opening').value = '';
   document.getElementById('s1-comment').value = '';
+  document.getElementById('s1-cc').textContent = '0';
   document.getElementById('f-revenue').value = '';
   document.getElementById('f-card').value = '';
   document.getElementById('f-inkass').value = '';
   document.getElementById('f-safe').value = '';
   document.getElementById('f-closing').value = '';
   document.getElementById('f-comment').value = '';
-  
+
   photoFiles = [];
   document.getElementById('photo-grid').innerHTML = '';
-  
+
   document.querySelectorAll('.salary-lines').forEach(el => el.innerHTML = '');
-  
-  document.querySelectorAll('.item-checkbox, .sup-row .item-checkbox').forEach(cb => {
+
+  document.querySelectorAll('.item-checkbox.checked').forEach(cb => {
     cb.classList.remove('checked');
     cb.textContent = '';
   });
-  
-  document.querySelectorAll('.item-row.selected, .sup-row.active').forEach(row => {
-    row.classList.remove('selected', 'active');
-  });
-  
-  document.querySelectorAll('.item-expand.show, .inline-amount.show').forEach(el => {
+  document.querySelectorAll('.item-row.selected').forEach(row => row.classList.remove('selected'));
+  document.querySelectorAll('.sup-row.active').forEach(row => row.classList.remove('active'));
+  document.querySelectorAll('.item-expand.show').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('.inline-amount.show').forEach(el => {
     el.classList.remove('show');
+    el.value = '';
   });
-  
-  document.querySelectorAll('#exp-payments .inline-amount, #exp-payments .mini-input').forEach(inp => {
-    inp.value = '';
-  });
-  
+  document.querySelectorAll('#exp-payments .mini-input').forEach(i => i.value = '');
+
   document.getElementById('exp-total').textContent = '0 ₽';
   document.getElementById('inv-total').textContent = '0 ₽';
+  document.getElementById('r-calc').textContent = '—';
+  document.getElementById('r-actual').textContent = '—';
+  document.getElementById('r-diff').textContent = '—';
   window._totalExpenses = 0;
-  
+
   document.getElementById('v-ned').classList.remove('show');
   document.getElementById('v-izl').classList.remove('show');
-  document.getElementById('r-diff').textContent = '—';
-  
-  const submitBtn = document.getElementById('submit-btn');
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Отправить отчёт ↗';
-  
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = false;
+  btn.textContent = 'Отправить отчёт ↗';
+
   document.getElementById('s1-date').value = isoDate;
-  
   go('screen-home');
 }
 
@@ -1217,30 +1111,26 @@ function nextS1() {
   go('screen-s2');
 }
 
-// ── Expenses: category tabs ──
+// ── Category tabs ──
 function switchCat(cat) {
   document.querySelectorAll('.exp-section').forEach(s => s.classList.remove('active'));
   document.getElementById('exp-' + cat).classList.add('active');
-  
   document.querySelectorAll('.cat-tab').forEach(tab => {
-    tab.classList.remove('active');
-    if (tab.getAttribute('onclick').includes(cat)) {
-      tab.classList.add('active');
-    }
+    tab.classList.toggle('active', tab.getAttribute('onclick').includes(cat));
   });
 }
 
-// ── Accordion toggle ──
+// ── Accordion ──
 function toggleAcc(id) {
   const body = document.getElementById(id);
-  const arrow = document.getElementById('arr-'+id);
+  const arrow = document.getElementById('arr-' + id);
   const head = body.previousElementSibling;
   const open = body.classList.toggle('open');
   arrow.classList.toggle('open', open);
   if (head) head.classList.toggle('open', open);
 }
 
-// ── Toggle supplier with "other" comment field ──
+// ── Supplier toggle (inline amount) ──
 function toggleSup(id) {
   const row = document.getElementById(id);
   const cb = row.querySelector('.item-checkbox');
@@ -1249,52 +1139,50 @@ function toggleSup(id) {
   cb.textContent = on ? '✓' : '';
   row.classList.toggle('selected', on);
   inp.classList.toggle('show', on);
-  const exp = document.getElementById(id+'-exp');
+  const exp = document.getElementById(id + '-exp');
   if (exp) exp.classList.toggle('show', on);
-  if (!on) { inp.value=''; calcExpenses(); } else inp.focus();
+  if (!on) { inp.value = ''; calcExpenses(); } else inp.focus();
 }
 
-// ── Toggle other checkbox ──
+// ── Other/expand toggle ──
 function toggleOth(id) {
   const row = document.getElementById(id);
   const cb = row.querySelector('.item-checkbox');
-  const exp = document.getElementById(id+'-exp');
+  const exp = document.getElementById(id + '-exp');
   const on = cb.classList.toggle('checked');
   cb.textContent = on ? '✓' : '';
   row.classList.toggle('selected', on);
-  exp.classList.toggle('show', on);
-  if (!on) { exp.querySelectorAll('input').forEach(i=>i.value=''); calcExpenses(); }
+  if (exp) exp.classList.toggle('show', on);
+  if (!on && exp) { exp.querySelectorAll('input').forEach(i => i.value = ''); calcExpenses(); }
 }
 
-// ── Salary lines ──
+// ── Salary ──
 let salC = 0;
 function addSal(containerId, label) {
-  const id = 'sl-'+(++salC);
+  const id = 'sl-' + (++salC);
   const c = document.getElementById(containerId);
   const n = c.children.length + 1;
-  
   const isOther = label === 'Другой сотрудник';
-  const extraField = isOther ? 
-    `<div style="margin-top:6px;"><input class="mini-input other-employee-name" type="text" placeholder="Укажите ФИО сотрудника (обязательно)" style="width:100%;"></div>` : 
-    '';
-  
+
   const d = document.createElement('div');
-  d.className = 'salary-line'; d.id = id;
-  d.innerHTML = `<span class="salary-line-lbl">${label} #${n}</span>
+  d.className = 'salary-line';
+  d.id = id;
+  d.innerHTML = `
+    <span class="salary-line-lbl">${label} #${n}</span>
     <input class="mini-input" style="width:100px;text-align:right;" type="number" placeholder="0 ₽" oninput="calcExpenses()">
     <button class="del-btn" onclick="document.getElementById('${id}').remove();calcExpenses()">×</button>
-    ${extraField}`;
+    ${isOther ? `<input class="mini-input other-employee-name" type="text" placeholder="ФИО сотрудника (обязательно)" style="width:100%;margin-top:6px;">` : ''}
+  `;
   c.appendChild(d);
-  
+
   if (isOther) {
-    const nameInput = d.querySelector('.other-employee-name');
-    nameInput.addEventListener('input', function() {
+    d.querySelector('.other-employee-name').addEventListener('input', function () {
       this.style.borderColor = this.value.trim() ? '#3A7A4E' : '#e05555';
     });
   }
 }
 
-// ── Calc total expenses ──
+// ── Calc expenses ──
 function calcExpenses() {
   let t = 0;
   document.querySelectorAll('#exp-payments .item-row.selected .inline-amount.show').forEach(i => {
@@ -1311,7 +1199,7 @@ function calcExpenses() {
 }
 window._totalExpenses = 0;
 
-// ── Toggle invoice ──
+// ── Invoice toggle ──
 function toggleInv(id) {
   const row = document.getElementById(id);
   const cb = row.querySelector('.item-checkbox');
@@ -1320,54 +1208,54 @@ function toggleInv(id) {
   cb.textContent = on ? '✓' : '';
   row.classList.toggle('active', on);
   inp.classList.toggle('show', on);
-  if (!on) { inp.value=''; calcInv(); } else inp.focus();
+  if (!on) { inp.value = ''; calcInv(); } else inp.focus();
 }
 function calcInv() {
   let t = 0;
-  document.querySelectorAll('#screen-s3 .inline-amount.show').forEach(i => t += parseFloat(i.value)||0);
+  document.querySelectorAll('#screen-s3 .inline-amount.show').forEach(i => t += parseFloat(i.value) || 0);
   document.getElementById('inv-total').textContent = Math.round(t).toLocaleString('ru') + ' ₽';
 }
 
 // ── Closing calc ──
 function calcClosing() {
-  const opening = parseFloat(document.getElementById('s1-opening').value)||0;
-  const revenue = parseFloat(document.getElementById('f-revenue').value)||0;
-  const card    = parseFloat(document.getElementById('f-card').value)||0;
-  const inkass  = parseFloat(document.getElementById('f-inkass').value)||0;
-  const closing = parseFloat(document.getElementById('f-closing').value)||0;
+  const opening = parseFloat(document.getElementById('s1-opening').value) || 0;
+  const revenue = parseFloat(document.getElementById('f-revenue').value) || 0;
+  const card    = parseFloat(document.getElementById('f-card').value) || 0;
+  const inkass  = parseFloat(document.getElementById('f-inkass').value) || 0;
+  const closing = parseFloat(document.getElementById('f-closing').value) || 0;
   const expenses = window._totalExpenses || 0;
 
   const calculated = opening + revenue - expenses - card - inkass;
   const diff = closing - calculated;
 
-  document.getElementById('r-calc').textContent   = revenue>0 ? Math.round(calculated).toLocaleString('ru')+' ₽' : '—';
-  document.getElementById('r-actual').textContent = closing>0 ? Math.round(closing).toLocaleString('ru')+' ₽' : '—';
+  document.getElementById('r-calc').textContent   = revenue > 0 ? Math.round(calculated).toLocaleString('ru') + ' ₽' : '—';
+  document.getElementById('r-actual').textContent = closing > 0 ? Math.round(closing).toLocaleString('ru') + ' ₽' : '—';
 
   const ned = document.getElementById('v-ned');
   const izl = document.getElementById('v-izl');
   const diffEl = document.getElementById('r-diff');
 
-  if (revenue>0 && closing>0) {
-    const abs = Math.abs(Math.round(diff)).toLocaleString('ru')+' ₽';
+  if (revenue > 0 && closing > 0) {
+    const abs = Math.abs(Math.round(diff)).toLocaleString('ru') + ' ₽';
     if (diff < 0) {
-      diffEl.textContent = '−'+abs; diffEl.style.color='#e05555';
+      diffEl.textContent = '−' + abs; diffEl.style.color = '#e05555';
       ned.classList.add('show'); izl.classList.remove('show');
-      document.getElementById('v-ned-amt').textContent = abs+' не хватает в кассе';
+      document.getElementById('v-ned-amt').textContent = abs + ' не хватает в кассе';
     } else if (diff > 0) {
-      diffEl.textContent = '+'+abs; diffEl.style.color='#4DC87A';
+      diffEl.textContent = '+' + abs; diffEl.style.color = '#4DC87A';
       izl.classList.add('show'); ned.classList.remove('show');
-      document.getElementById('v-izl-amt').textContent = abs+' сверх расчёта';
+      document.getElementById('v-izl-amt').textContent = abs + ' сверх расчёта';
     } else {
-      diffEl.textContent = '0 ₽ — всё сходится'; diffEl.style.color='#4DC87A';
+      diffEl.textContent = '0 ₽ — всё сходится'; diffEl.style.color = '#4DC87A';
       ned.classList.remove('show'); izl.classList.remove('show');
     }
   } else {
-    diffEl.textContent='—'; diffEl.style.color='#9FD4B8';
+    diffEl.textContent = '—'; diffEl.style.color = '#9FD4B8';
     ned.classList.remove('show'); izl.classList.remove('show');
   }
 }
 
-// ── Photo upload ──
+// ── Photos ──
 let photoFiles = [];
 function handlePhotos(input) {
   Array.from(input.files).forEach(file => {
@@ -1377,17 +1265,18 @@ function handlePhotos(input) {
     reader.onload = e => {
       const grid = document.getElementById('photo-grid');
       const t = document.createElement('div');
-      t.className='photo-thumb'; t.id='th-'+idx;
-      t.innerHTML=`<img src="${e.target.result}" alt="фото"><button class="photo-thumb-del" onclick="rmPhoto(${idx})">×</button>`;
+      t.className = 'photo-thumb'; t.id = 'th-' + idx;
+      t.innerHTML = `<img src="${e.target.result}" alt="фото"><button class="photo-thumb-del" onclick="rmPhoto(${idx})">×</button>`;
       grid.appendChild(t);
     };
     reader.readAsDataURL(file);
   });
-  input.value='';
+  input.value = '';
 }
 function rmPhoto(idx) {
-  photoFiles[idx]=null;
-  const t=document.getElementById('th-'+idx); if(t) t.remove();
+  photoFiles[idx] = null;
+  const t = document.getElementById('th-' + idx);
+  if (t) t.remove();
 }
 
 // ── Compress image ──
@@ -1395,22 +1284,16 @@ function compressImage(file, maxWidth = 1280, quality = 0.8) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error('Не удалось прочитать файл'));
-    reader.onload = (e) => {
+    reader.onload = e => {
       const img = new Image();
       img.onerror = () => reject(new Error('Не удалось загрузить изображение'));
       img.onload = () => {
         let { width, height } = img;
-        if (width > maxWidth) {
-          height = Math.round(height * maxWidth / width);
-          width = maxWidth;
-        }
+        if (width > maxWidth) { height = Math.round(height * maxWidth / width); width = maxWidth; }
         const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        const base64 = canvas.toDataURL('image/jpeg', quality).split(',')[1];
-        resolve(base64);
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
       };
       img.src = e.target.result;
     };
@@ -1418,15 +1301,17 @@ function compressImage(file, maxWidth = 1280, quality = 0.8) {
   });
 }
 
-// ── Collect suppliers data ──
+// ── Collect suppliers ──
 function collectSuppliers() {
   const map = {};
-  document.querySelectorAll('#exp-payments .item-row.selected').forEach(row => {
+  document.querySelectorAll('#acc-food .item-row.selected, #acc-drinks .item-row.selected, #acc-pack .item-row.selected').forEach(row => {
     const name = row.querySelector('.item-name').textContent.trim();
     const amount = parseFloat(row.querySelector('.inline-amount').value) || 0;
-    map[name] = amount;
-    const commentInp = row.querySelector('.item-expand input[type=text]');
-    if (commentInp) map[name + ' (имя)'] = commentInp.value.trim();
+    if (amount > 0) {
+      map[name] = amount;
+      const commentInp = row.querySelector('.item-expand input[type=text]');
+      if (commentInp && commentInp.value.trim()) map[name + ' (имя)'] = commentInp.value.trim();
+    }
   });
   return map;
 }
@@ -1434,12 +1319,15 @@ function collectSuppliers() {
 // ── Collect other payments ──
 function collectOtherPayments() {
   const map = {};
-  document.querySelectorAll('#exp-payments .item-row.selected').forEach(row => {
+  document.querySelectorAll('#acc-point .item-row.selected, #acc-mkt .item-row.selected, #acc-misc .item-row.selected').forEach(row => {
     const name = row.querySelector('.item-name').textContent.trim();
     const amountInp = row.querySelector('.item-expand input[type=number]');
     const commentInp = row.querySelector('.item-expand input[type=text]');
-    map[name] = parseFloat(amountInp?.value) || 0;
-    if (commentInp) map[name + ' (комм)'] = commentInp.value.trim();
+    const amount = parseFloat(amountInp?.value) || 0;
+    if (amount > 0) {
+      map[name] = amount;
+      if (commentInp && commentInp.value.trim()) map[name + ' (комм)'] = commentInp.value.trim();
+    }
   });
   return map;
 }
@@ -1448,38 +1336,25 @@ function collectOtherPayments() {
 function collectSalary() {
   const map = {};
   let hasError = false;
-  
+
   document.querySelectorAll('#exp-salary .salary-item').forEach(item => {
     const title = item.querySelector('.salary-title').textContent.trim();
     let total = 0;
-    let employeeNames = [];
-    
+    const employeeNames = [];
+
     item.querySelectorAll('.salary-line').forEach(line => {
-      const amountInput = line.querySelector('input[type=number]');
-      const amount = parseFloat(amountInput?.value) || 0;
-      
+      const amount = parseFloat(line.querySelector('input[type=number]')?.value) || 0;
       if (amount > 0) {
         total += amount;
-        
         if (title === 'Другой сотрудник') {
           const nameInput = line.querySelector('.other-employee-name');
           const name = nameInput?.value.trim() || '';
-          
-          if (!name) {
-            if (nameInput) {
-              nameInput.style.borderColor = '#e05555';
-            }
-            hasError = true;
-          } else {
-            if (nameInput) {
-              nameInput.style.borderColor = '#3A7A4E';
-            }
-            employeeNames.push(name);
-          }
+          if (!name) { if (nameInput) nameInput.style.borderColor = '#e05555'; hasError = true; }
+          else { if (nameInput) nameInput.style.borderColor = '#3A7A4E'; employeeNames.push(name); }
         }
       }
     });
-    
+
     if (total > 0) {
       if (title === 'Другой сотрудник' && employeeNames.length > 0) {
         map[title + ' (' + employeeNames.join(', ') + ')'] = total;
@@ -1488,12 +1363,11 @@ function collectSalary() {
       }
     }
   });
-  
+
   if (hasError) {
     alert('Пожалуйста, укажите ФИО для всех сотрудников в категории "Другой сотрудник"');
     return null;
   }
-  
   return map;
 }
 
@@ -1510,13 +1384,14 @@ function collectInvoices() {
   map['__total'] = total;
   return map;
 }
+
+// ── Submit report ──
 async function submitReport() {
-  // ✅ ПРОВЕРКА: Фото обязательны
-  if (!photoFiles || photoFiles.length === 0) {
-    alert(' Пожалуйста, загрузите фото накладных!\n\nБез фото отчёт не может быть отправлен.');
+  const validFiles = photoFiles.filter(f => f !== null);
+  if (validFiles.length === 0) {
+    alert('Пожалуйста, загрузите фото накладных!\n\nБез фото отчёт не может быть отправлен.');
     return;
   }
-  
   if (!document.getElementById('f-revenue').value) { alert('Укажите выручку'); return; }
   if (!document.getElementById('f-closing').value) { alert('Укажите остаток на конец дня'); return; }
 
@@ -1524,24 +1399,15 @@ async function submitReport() {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Подготовка данных...';
 
-  // Собираем основные данные БЕЗ фото
-  const invoices = collectInvoices();
-  const totalInvoices = invoices['__total'] || 0;
-  delete invoices['__total'];
-
-  // ✅ ИСПРАВЛЕНИЕ: Правильная обработка даты
   const dateValue = document.getElementById('s1-date').value;
+  // Всегда приводим к ISO для бэкенда
   let backendDate, displayDate;
-  
   if (dateValue.includes('-')) {
-    // ISO формат: "2026-06-13"
-    const parts = dateValue.split('-');
-    backendDate = dateValue;  // Уже в правильном формате
-    displayDate = parts[2] + '.' + parts[1] + '.' + parts[0];  // "13.06.2026"
+    backendDate = dateValue;
+    displayDate = formatDate(dateValue);
   } else {
-    // Старый формат: "13.06.2026"
-    const parts = dateValue.split('.');
-    backendDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+    const p = dateValue.split('.');
+    backendDate = p[2] + '-' + p[1] + '-' + p[0];
     displayDate = dateValue;
   }
 
@@ -1561,11 +1427,15 @@ async function submitReport() {
     return;
   }
 
+  const invoices = collectInvoices();
+  const totalInvoices = invoices['__total'] || 0;
+  delete invoices['__total'];
+
   const data = {
-    type:           'shift',
+    type:           'shift',          // ← ВАЖНО: явно указываем тип
     date:           backendDate,
     displayDate:    displayDate,
-    name:           document.getElementById('s1-name').value,
+    name:           document.getElementById('s1-name').value.trim(),
     location:       document.getElementById('s1-loc').value,
     opening:        opening,
     openingComment: document.getElementById('s1-comment').value,
@@ -1583,89 +1453,71 @@ async function submitReport() {
     calcBalance:    Math.round(calc),
     diff:           Math.round(diff),
     verdict:        diff < 0 ? 'Недостача' : diff > 0 ? 'Излишек' : 'Сходится',
-    photos:         [], // ← ПУСТОЙ МАССИВ, фото отправим отдельно
-    photoCount:     photoFiles.length, // ← Количество фото для информации
+    photoCount:     validFiles.length,
     comment:        document.getElementById('f-comment').value
   };
 
   try {
-    // ШАГ 1: Отправляем основные данные БЕЗ фото
+    // Шаг 1: основные данные
     submitBtn.textContent = 'Отправка отчёта...';
-    console.log('📤 Отправляем основные данные...');
-    
     const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(data)
     });
-    
-    const result = await response.json();
-    
-    if (!result.ok) {
-      throw new Error(result.error || 'Ошибка сервера');
+
+    let result;
+    try {
+      result = await response.json();
+    } catch (e) {
+      throw new Error('Сервер вернул некорректный ответ');
     }
-    
-    console.log('✅ Основные данные отправлены');
-    
-    // ШАГ 2: Отправляем фото по одному
-    if (photoFiles.length > 0) {
-      submitBtn.textContent = `Отправка фото 0/${photoFiles.length}...`;
-      
-      for (let i = 0; i < photoFiles.length; i++) {
-        const file = photoFiles[i];
-        if (!file) continue;
-        
-        submitBtn.textContent = `Отправка фото ${i + 1}/${photoFiles.length}...`;
-        console.log(`📸 Отправляем фото ${i + 1}/${photoFiles.length}`);
-        
-        try {
-          // Сжимаем фото
-          const base64 = await compressImage(file, 800, 0.6);
-          
-          // Отправляем одно фото
-          const photoData = {
-            type: 'photo',
-            reportId: result.reportId || data.date + '_' + data.name,
-            photoIndex: i,
+
+    if (!result.ok) throw new Error(result.error || 'Ошибка сервера');
+
+    const reportId = result.reportId || (backendDate + '_' + data.name);
+
+    // Шаг 2: фото по одному
+    for (let i = 0; i < photoFiles.length; i++) {
+      const file = photoFiles[i];
+      if (!file) continue;
+
+      submitBtn.textContent = `Отправка фото ${i + 1}/${validFiles.length}...`;
+
+      try {
+        const base64 = await compressImage(file, 800, 0.6);
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            type:        'photo',
+            reportId:    reportId,
+            photoIndex:  i,
             photoBase64: base64,
-            location: data.location,
-            name: data.name,
-            date: data.displayDate
-          };
-          
-          await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(photoData)
-          });
-          
-          console.log(`✅ Фото ${i + 1} отправлено`);
-          
-        } catch (photoErr) {
-          console.error(`❌ Ошибка фото ${i + 1}:`, photoErr);
-          // Продолжаем с остальными фото
-        }
-        
-        // Небольшая пауза между фото
-        await new Promise(resolve => setTimeout(resolve, 300));
+            location:    data.location,
+            name:        data.name,
+            date:        displayDate
+          })
+        });
+      } catch (photoErr) {
+        console.error('Ошибка фото ' + (i + 1) + ':', photoErr);
       }
+
+      await new Promise(r => setTimeout(r, 300));
     }
-    
-    console.log('🎉 Все данные отправлены!');
+
     go('screen-success');
-    
+
   } catch (err) {
-    console.error('❌ Ошибка отправки:', err);
+    console.error('Ошибка отправки:', err);
     alert('Ошибка отправки: ' + err.message);
     submitBtn.disabled = false;
     submitBtn.textContent = 'Отправить отчёт ↗';
   }
 }
-// ── Submit report ──
 
-// ═══════════════════════════════ OFF-CASH FUNCTIONS ═══════════════════════════════
+// ═══════════════════════════════ OFF-CASH ═══════════════════════════════
 
-// ── Справочник категорий и подкатегорий ──
 const CATEGORIES = {
   '1.1 Продукты/Поставщики': ['Беркат','Океан','Филе','Фарш','Аддуми','Локали','Югпродукт','Шалифуд','Пекарня','Магазин','Другой поставщик'],
   '1.2 Напитки': ['Напитки','Сиропы','Стом','Исаев','Инзаре'],
@@ -1685,100 +1537,65 @@ const CATEGORIES = {
   '4.2 Другое': [],
   '4.5 Погашение долга': ['Локали','Югпродукт','Другой']
 };
-
 const PLUS_SUBCATS = ['Вывоз масла','Ям','Сдача','Возврат'];
 
-// ── Инициализация категорий ──
 function initExpenseCategories() {
-  const catSelect = document.getElementById('oc-expense-category');
-  const moveCatSelect = document.getElementById('oc-move-expense-category');
-  
-  Object.keys(CATEGORIES).forEach(cat => {
-    const opt1 = document.createElement('option');
-    opt1.value = cat; opt1.textContent = cat;
-    catSelect.appendChild(opt1);
-    
-    const opt2 = document.createElement('option');
-    opt2.value = cat; opt2.textContent = cat;
-    moveCatSelect.appendChild(opt2);
+  const selectors = ['oc-expense-category', 'oc-move-expense-category'];
+  selectors.forEach(selId => {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+    Object.keys(CATEGORIES).forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat; opt.textContent = cat;
+      sel.appendChild(opt);
+    });
   });
 }
+initExpenseCategories();
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initExpenseCategories);
-} else {
-  initExpenseCategories();
-}
-
-// ── Обновление подкатегорий ──
 function updateSubcats() {
   const cat = document.getElementById('oc-expense-category').value;
-  const subSelect = document.getElementById('oc-expense-subcategory');
-  subSelect.innerHTML = '<option value="" disabled selected>Выберите...</option>';
-  
-  if (cat && CATEGORIES[cat]) {
-    if (CATEGORIES[cat].length === 0) {
-      const opt = document.createElement('option');
-      opt.value = cat; opt.textContent = '(без подкатегории)';
-      subSelect.appendChild(opt);
-    } else {
-      CATEGORIES[cat].forEach(sub => {
-        const opt = document.createElement('option');
-        opt.value = sub; opt.textContent = sub;
-        subSelect.appendChild(opt);
-      });
-    }
+  const sub = document.getElementById('oc-expense-subcategory');
+  sub.innerHTML = '<option value="" disabled selected>Выберите...</option>';
+  if (!cat) return;
+  const list = CATEGORIES[cat] || [];
+  if (list.length === 0) {
+    const o = document.createElement('option'); o.value = cat; o.textContent = '(без подкатегории)'; sub.appendChild(o);
+  } else {
+    list.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sub.appendChild(o); });
   }
 }
 
 function updateMoveSubcats() {
   const cat = document.getElementById('oc-move-expense-category').value;
-  const subSelect = document.getElementById('oc-move-expense-subcategory');
-  subSelect.innerHTML = '<option value="" disabled selected>Выберите...</option>';
-  
-  if (cat && CATEGORIES[cat]) {
-    if (CATEGORIES[cat].length === 0) {
-      const opt = document.createElement('option');
-      opt.value = cat; opt.textContent = '(без подкатегории)';
-      subSelect.appendChild(opt);
-    } else {
-      CATEGORIES[cat].forEach(sub => {
-        const opt = document.createElement('option');
-        opt.value = sub; opt.textContent = sub;
-        subSelect.appendChild(opt);
-      });
-    }
+  const sub = document.getElementById('oc-move-expense-subcategory');
+  sub.innerHTML = '<option value="" disabled selected>Выберите...</option>';
+  if (!cat) return;
+  const list = CATEGORIES[cat] || [];
+  if (list.length === 0) {
+    const o = document.createElement('option'); o.value = cat; o.textContent = '(без подкатегории)'; sub.appendChild(o);
+  } else {
+    list.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sub.appendChild(o); });
   }
 }
 
-// ── Список добавленных позиций ──
 let expenseItems = [];
 
 function addExpenseItem() {
-  const cat = document.getElementById('oc-expense-category').value;
-  const sub = document.getElementById('oc-expense-subcategory').value;
+  const cat    = document.getElementById('oc-expense-category').value;
+  const sub    = document.getElementById('oc-expense-subcategory').value;
   const amount = parseFloat(document.getElementById('oc-expense-amount').value);
   const comment = document.getElementById('oc-expense-comment').value.trim();
-  
-  if (!cat) { alert('Выберите категорию'); return; }
-  if (!sub) { alert('Выберите подкатегорию'); return; }
+
+  if (!cat)              { alert('Выберите категорию'); return; }
+  if (!sub)              { alert('Выберите подкатегорию'); return; }
   if (!amount || amount <= 0) { alert('Укажите сумму'); return; }
-  
-  const isPlus = PLUS_SUBCATS.includes(sub);
-  const sign = isPlus ? '+' : '-';
-  
-  expenseItems.push({
-    category: cat,
-    subcategory: sub,
-    amount: amount,
-    sign: sign,
-    comment: comment
-  });
-  
+
+  expenseItems.push({ category: cat, subcategory: sub, amount: amount, sign: PLUS_SUBCATS.includes(sub) ? '+' : '-', comment: comment });
+
   document.getElementById('oc-expense-amount').value = '';
   document.getElementById('oc-expense-comment').value = '';
-  document.getElementById('oc-expense-subcategory').value = '';
-  
+  document.getElementById('oc-expense-subcategory').selectedIndex = 0;
   renderExpenseItems();
 }
 
@@ -1790,14 +1607,10 @@ function removeExpenseItem(idx) {
 function renderExpenseItems() {
   const list = document.getElementById('expense-items-list');
   list.innerHTML = '';
-  
   expenseItems.forEach((item, idx) => {
     const div = document.createElement('div');
     div.className = 'item-row';
-    div.style.cssText = 'background:#245E37;border:0.5px solid #3A7A4E;border-radius:12px;padding:10px 12px;margin-bottom:8px;';
-    
     const signColor = item.sign === '+' ? '#4DC87A' : '#e05555';
-    
     div.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
         <div style="flex:1;">
@@ -1809,17 +1622,13 @@ function renderExpenseItems() {
           <div style="font-size:14px;font-weight:600;color:${signColor};">${item.sign}${Math.round(item.amount).toLocaleString('ru')} ₽</div>
           <button onclick="removeExpenseItem(${idx})" style="background:none;border:none;color:#e05555;font-size:12px;cursor:pointer;margin-top:4px;">Удалить</button>
         </div>
-      </div>
-    `;
+      </div>`;
     list.appendChild(div);
   });
-  
   document.getElementById('expense-count').textContent = expenseItems.length;
 }
 
-// ── Off Cash Photos ──
 let offCashPhotos = [];
-
 function handleOffCashPhotos(input) {
   Array.from(input.files).forEach(file => {
     const idx = offCashPhotos.length;
@@ -1828,152 +1637,125 @@ function handleOffCashPhotos(input) {
     reader.onload = e => {
       const grid = document.getElementById('oc-photo-grid');
       const t = document.createElement('div');
-      t.className='photo-thumb'; t.id='oc-th-'+idx;
-      t.innerHTML=`<img src="${e.target.result}" alt="фото"><button class="photo-thumb-del" onclick="rmOffCashPhoto(${idx})">×</button>`;
+      t.className = 'photo-thumb'; t.id = 'oc-th-' + idx;
+      t.innerHTML = `<img src="${e.target.result}" alt="фото"><button class="photo-thumb-del" onclick="rmOffCashPhoto(${idx})">×</button>`;
       grid.appendChild(t);
     };
     reader.readAsDataURL(file);
   });
-  input.value='';
+  input.value = '';
 }
-
 function rmOffCashPhoto(idx) {
-  offCashPhotos[idx]=null;
-  const t=document.getElementById('oc-th-'+idx); if(t) t.remove();
+  offCashPhotos[idx] = null;
+  const t = document.getElementById('oc-th-' + idx); if (t) t.remove();
 }
 
-// ── Show Operation Type ──
 function showOperationType() {
   const type = document.getElementById('oc-type').value;
   document.querySelectorAll('.oc-section').forEach(s => s.style.display = 'none');
   document.getElementById('move-expense-step').style.display = 'none';
-  
-  if (type === 'income') document.getElementById('oc-income').style.display = 'block';
-  else if (type === 'transfer') document.getElementById('oc-transfer').style.display = 'block';
-  else if (type === 'move') document.getElementById('oc-move').style.display = 'block';
-  else if (type === 'expense') document.getElementById('oc-expense').style.display = 'block';
+  const map = { income: 'oc-income', transfer: 'oc-transfer', move: 'oc-move', expense: 'oc-expense' };
+  if (map[type]) document.getElementById(map[type]).style.display = 'block';
 }
 
-// ── Показать шаг расхода внутри перемещения ──
 function showMoveExpense() {
-  const fromAccount = document.getElementById('oc-move-from-account').value;
-  const toLocation = document.getElementById('oc-move-to-location').value;
-  const amount = document.getElementById('oc-move-amount').value;
-  
-  if (!fromAccount || !toLocation || !amount) {
+  if (!document.getElementById('oc-move-from-account').value ||
+      !document.getElementById('oc-move-to-location').value ||
+      !document.getElementById('oc-move-amount').value) {
     alert('Заполните счёт списания, точку назначения и сумму');
     return;
   }
-  
-  document.getElementById('move-expense-step').style.display = 'block';
-  document.getElementById('move-expense-step').scrollIntoView({ behavior: 'smooth' });
+  const step = document.getElementById('move-expense-step');
+  step.style.display = 'block';
+  step.scrollIntoView({ behavior: 'smooth' });
 }
 
-// ── Submit Off Cash ──
 async function submitOffCash(type) {
   const location = document.getElementById('oc-location').value;
   if (!location) { alert('Выберите точку'); return; }
-  
-  const submitBtn = document.querySelector('#screen-off-cash .btn-primary:not([disabled])');
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Отправка...';
-  }
-  
-  const data = {
-    type: 'off-cash',
-    operationType: type,
-    location: location,
-    timestamp: new Date().toISOString()
-  };
-  
+
+  // Находим активную кнопку
+  const activeSection = document.getElementById(
+    type === 'income' ? 'oc-income' :
+    type === 'transfer' ? 'oc-transfer' :
+    type === 'move' ? 'oc-move' : 'oc-expense'
+  );
+  const submitBtn = activeSection ? activeSection.querySelector('.btn-primary:last-of-type') : null;
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Отправка...'; }
+
+  const resetBtn = () => { if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Отправить ↗'; } };
+
+  const data = { type: 'off-cash', operationType: type, location, timestamp: new Date().toISOString() };
+
   if (type === 'income') {
     data.account = document.getElementById('oc-income-account').value;
-    data.amount = parseFloat(document.getElementById('oc-income-amount').value);
+    data.amount  = parseFloat(document.getElementById('oc-income-amount').value);
     if (!data.amount) { alert('Укажите сумму'); resetBtn(); return; }
   }
-  
   else if (type === 'transfer') {
     data.fromAccount = document.getElementById('oc-transfer-from').value;
-    data.toAccount = document.getElementById('oc-transfer-to').value;
-    data.amount = parseFloat(document.getElementById('oc-transfer-amount').value);
-    data.comment = document.getElementById('oc-transfer-comment').value;
-    if (!data.fromAccount || !data.toAccount || !data.amount) { 
-      alert('Заполните все поля'); resetBtn(); return; 
-    }
+    data.toAccount   = document.getElementById('oc-transfer-to').value;
+    data.amount      = parseFloat(document.getElementById('oc-transfer-amount').value);
+    data.comment     = document.getElementById('oc-transfer-comment').value;
+    if (!data.fromAccount || !data.toAccount || !data.amount) { alert('Заполните все поля'); resetBtn(); return; }
   }
-  
   else if (type === 'move') {
-    data.fromAccount = document.getElementById('oc-move-from-account').value;
-    data.toLocation = document.getElementById('oc-move-to-location').value;
-    data.toAccount = 'долг';
-    data.amount = parseFloat(document.getElementById('oc-move-amount').value);
-    data.comment = document.getElementById('oc-move-comment').value;
-    
-    data.expenseCategory = document.getElementById('oc-move-expense-category').value;
+    data.fromAccount        = document.getElementById('oc-move-from-account').value;
+    data.toLocation         = document.getElementById('oc-move-to-location').value;
+    data.toAccount          = 'долг';
+    data.amount             = parseFloat(document.getElementById('oc-move-amount').value);
+    data.comment            = document.getElementById('oc-move-comment').value;
+    data.expenseCategory    = document.getElementById('oc-move-expense-category').value;
     data.expenseSubcategory = document.getElementById('oc-move-expense-subcategory').value;
-    data.expenseRecipient = document.getElementById('oc-move-expense-recipient').value;
-    data.expenseComment = document.getElementById('oc-move-expense-comment').value;
-    
-    if (!data.fromAccount || !data.toLocation || !data.amount) { 
-      alert('Заполните все поля перемещения'); resetBtn(); return; 
-    }
-    if (!data.expenseCategory || !data.expenseSubcategory) {
-      alert('Укажите категорию и подкатегорию расхода'); resetBtn(); return;
-    }
+    data.expenseRecipient   = document.getElementById('oc-move-expense-recipient').value;
+    data.expenseComment     = document.getElementById('oc-move-expense-comment').value;
+    if (!data.fromAccount || !data.toLocation || !data.amount) { alert('Заполните все поля перемещения'); resetBtn(); return; }
+    if (!data.expenseCategory || !data.expenseSubcategory) { alert('Укажите категорию и подкатегорию расхода'); resetBtn(); return; }
   }
-  
   else if (type === 'expense') {
     data.account = document.getElementById('oc-expense-account').value;
     if (!data.account) { alert('Выберите счет списания'); resetBtn(); return; }
     if (expenseItems.length === 0) { alert('Добавьте хотя бы одну позицию'); resetBtn(); return; }
     data.items = expenseItems;
-    
-    if (offCashPhotos.length > 0) {
+
+    const validPhotos = offCashPhotos.filter(f => f !== null);
+    if (validPhotos.length > 0) {
       try {
-        const photosBase64 = [];
-        for (let i = 0; i < offCashPhotos.length; i++) {
-          if (offCashPhotos[i]) {
-            const base64 = await compressImage(offCashPhotos[i], 1280, 0.8);
-            photosBase64.push(base64);
-          }
+        data.photos = [];
+        for (const f of validPhotos) {
+          data.photos.push(await compressImage(f, 1280, 0.8));
         }
-        data.photos = photosBase64;
-      } catch (err) {
-        console.error('Ошибка фото:', err);
-      }
+      } catch (err) { console.error('Ошибка фото:', err); }
     }
   }
-  
+
   try {
     const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(data)
     });
-    
-    const result = await response.json();
-    if (result.ok) {
-      go('screen-off-cash-success');
-      offCashPhotos = [];
-      document.getElementById('oc-photo-grid').innerHTML = '';
-      document.getElementById('oc-type').value = '';
-      document.querySelectorAll('.oc-section').forEach(s => s.style.display = 'none');
-      expenseItems = [];
-      renderExpenseItems();
-    } else {
-      throw new Error(result.error || 'Ошибка');
-    }
+
+    let result;
+    try { result = await response.json(); } catch (e) { throw new Error('Сервер вернул некорректный ответ'); }
+
+    if (!result.ok) throw new Error(result.error || 'Ошибка');
+
+    go('screen-off-cash-success');
+
+    // Сброс полей off-cash
+    offCashPhotos = [];
+    document.getElementById('oc-photo-grid').innerHTML = '';
+    document.getElementById('oc-type').selectedIndex = 0;
+    document.getElementById('oc-location').selectedIndex = 0;
+    document.querySelectorAll('.oc-section').forEach(s => s.style.display = 'none');
+    document.getElementById('move-expense-step').style.display = 'none';
+    expenseItems = [];
+    renderExpenseItems();
+
   } catch (err) {
     alert('Ошибка отправки: ' + err.message);
     resetBtn();
-  }
-  
-  function resetBtn() {
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Отправить ↗';
-    }
   }
 }
 </script>
