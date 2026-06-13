@@ -403,10 +403,10 @@ textarea.field-input { resize: none; line-height: 1.5; }
         <div class="item-row" id="sup-f5"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f5')"></div><span class="item-name">Аддуми</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
         <div class="item-row" id="sup-f6"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f6')"></div><span class="item-name">Шалифуд</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
         <div class="item-row" id="sup-f7"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f7')"></div><span class="item-name">Югпродукт</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
-        <div class="item-row" id="sup-f8"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f7')"></div><span class="item-name">Локали</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
+        <div class="item-row" id="sup-f8"><div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f8')"></div><span class="item-name">Локали</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div></div>
         <div class="item-row" id="sup-f9">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f8')"></div><span class="item-name">Другой поставщик продуктов</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-          <div class="item-expand" id="sup-f8-exp"><input class="mini-input" style="margin-top:8px;" type="text" placeholder="Укажите поставщика..."></div>
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleSup('sup-f9')"></div><span class="item-name">Другой поставщик продуктов</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div class="item-expand" id="sup-f9-exp"><input class="mini-input" style="margin-top:8px;" type="text" placeholder="Укажите поставщика..."></div>
         </div>
       </div>
     </div>
@@ -445,103 +445,114 @@ textarea.field-input { resize: none; line-height: 1.5; }
 
     <div class="acc-group">
       <div class="acc-group-head" onclick="toggleAcc('acc-point')">
-        <span class="acc-group-title">🏪 Расходы точки</span>
-        <span class="acc-arrow" id="arr-acc-point">›</span>
-      </div>
-      <div class="acc-group-body" id="acc-point">
-        <div class="item-row" id="oth-p1">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p1')"></div><span class="item-name">Комм. услуги</span></div>
-          <div class="item-expand" id="oth-p1-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-p2">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p2')"></div><span class="item-name">Оборудование</span></div>
-          <div class="item-expand" id="oth-p2-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-p3">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p3')"></div><span class="item-name">Малая техника и аппараты</span></div>
-          <div class="item-expand" id="oth-p3-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-p4">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p4')"></div><span class="item-name">Мебель и оснащение</span></div>
-          <div class="item-expand" id="oth-p4-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-p5">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p5')"></div><span class="item-name">Инструменты и инвентарь</span></div>
-          <div class="item-expand" id="oth-p5-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-p6">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p6')"></div><span class="item-name">Ремонт оборудования/техники</span></div>
-          <div class="item-expand" id="oth-p6-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-p7">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p7')"></div><span class="item-name">Ремонт на точке</span></div>
-          <div class="item-expand" id="oth-p7-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-p8">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p8')"></div><span class="item-name">Вывоз мусора</span></div>
-          <div class="item-expand" id="oth-p8-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-p9">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p9')"></div><span class="item-name">Хозка (чистота, канцтовары)</span></div>
-          <div class="item-expand" id="oth-p9-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-p10">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p10')"></div><span class="item-name">Транспортный расход</span></div>
-          <div class="item-expand" id="oth-p10-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-      </div>
+            <span class="acc-group-title">🏪 Расходы точки</span>
+      <span class="acc-arrow" id="arr-acc-point">›</span>
     </div>
+    <div class="acc-group-body" id="acc-point">
+      
+      <!-- Существующие пункты -->
+      <div class="item-row" id="oth-p1">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p1')"></div><span class="item-name">Комм. услуги</span></div>
+        <div class="item-expand" id="oth-p1-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
 
+      <div class="item-row" id="oth-p2">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p2')"></div><span class="item-name">Оборудование</span></div>
+        <div class="item-expand" id="oth-p2-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-row" id="oth-p3">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p3')"></div><span class="item-name">Ремонт оборудования</span></div>
+        <div class="item-expand" id="oth-p3-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-row" id="oth-p4">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p4')"></div><span class="item-name">Вывоз мусора</span></div>
+        <div class="item-expand" id="oth-p4-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-row" id="oth-p5">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p5')"></div><span class="item-name">Хоз. расход (моющие, канцелярия и прочее)</span></div>
+        <div class="item-expand" id="oth-p5-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-row" id="oth-p6">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p6')"></div><span class="item-name">Транспортный расход</span></div>
+        <div class="item-expand" id="oth-p6-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Новые добавленные пункты -->
+      <div class="item-row" id="oth-p7">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p7')"></div><span class="item-name">Малая техника и аппараты</span></div>
+        <div class="item-expand" id="oth-p7-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-row" id="oth-p8">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p8')"></div><span class="item-name">Мебель и оснащение</span></div>
+        <div class="item-expand" id="oth-p8-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-row" id="oth-p9">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p9')"></div><span class="item-name">Инструменты и инвентарь</span></div>
+        <div class="item-expand" id="oth-p9-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-row" id="oth-p10">
+        <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-p10')"></div><span class="item-name">Ремонт на точке</span></div>
+        <div class="item-expand" id="oth-p10-exp">
+          <div class="expand-2" style="margin-top:8px;">
+            <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+            <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
     <div class="acc-group">
       <div class="acc-group-head" onclick="toggleAcc('acc-mkt')">
         <span class="acc-group-title">📣 Маркетинг</span>
@@ -576,7 +587,7 @@ textarea.field-input { resize: none; line-height: 1.5; }
           </div>
         </div>
         <div class="item-row" id="oth-m4">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m4')"></div><span class="item-name">Брендинг / Дизайн</span></div>
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m4')"></div><span class="item-name">Рекламный или комплимент чек</span></div>
           <div class="item-expand" id="oth-m4-exp">
             <div class="expand-2" style="margin-top:8px;">
               <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
@@ -585,8 +596,17 @@ textarea.field-input { resize: none; line-height: 1.5; }
           </div>
         </div>
         <div class="item-row" id="oth-m5">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m5')"></div><span class="item-name">Реклама (услуги)</span></div>
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m5')"></div><span class="item-name">Брендинг / Дизайн</span></div>
           <div class="item-expand" id="oth-m5-exp">
+            <div class="expand-2" style="margin-top:8px;">
+              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-row" id="oth-m6">
+          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-m6')"></div><span class="item-name">Реклама (услуги)</span></div>
+          <div class="item-expand" id="oth-m6-exp">
             <div class="expand-2" style="margin-top:8px;">
               <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
               <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
@@ -596,78 +616,87 @@ textarea.field-input { resize: none; line-height: 1.5; }
       </div>
     </div>
 
-    <div class="acc-group">
-      <div class="acc-group-head" onclick="toggleAcc('acc-misc')">
-        <span class="acc-group-title">📂 Другое</span>
-        <span class="acc-arrow" id="arr-acc-misc">›</span>
-      </div>
-      <div class="acc-group-body" id="acc-misc">
-        <div class="item-row" id="oth-o1">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o1')"></div><span class="item-name">Неоплаченный чек</span></div>
-          <div class="item-expand" id="oth-o1-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-o2">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o2')"></div><span class="item-name">Возврат</span></div>
-          <div class="item-expand" id="oth-o2-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-o3">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o3')"></div><span class="item-name">Тайный покупатель / Проработки</span></div>
-          <div class="item-expand" id="oth-o3-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-o4">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o4')"></div><span class="item-name">Налог</span></div>
-          <div class="item-expand" id="oth-o4-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-o5">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o5')"></div><span class="item-name">Погашение долга</span></div>
-          <div class="item-expand" id="oth-o5-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-o6">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o6')"></div><span class="item-name">Перемещение денег</span></div>
-          <div class="item-expand" id="oth-o6-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
-        </div>
-        <div class="item-row" id="oth-o7">
-          <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o7')"></div><span class="item-name">Прочее</span></div>
-          <div class="item-expand" id="oth-o7-exp">
-            <div class="expand-2" style="margin-top:8px;">
-              <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
-              <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
-            </div>
-          </div>
+   <div class="acc-group">
+  <div class="acc-group-head" onclick="toggleAcc('acc-misc')">
+    <span class="acc-group-title">📂 Другое</span>
+    <span class="acc-arrow" id="arr-acc-misc">›</span>
+  </div>
+  <div class="acc-group-body" id="acc-misc">
+    
+    <!-- Существующие пункты -->
+    <div class="item-row" id="oth-o1">
+      <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o1')"></div><span class="item-name">Неоплаченный чек</span></div>
+      <div class="item-expand" id="oth-o1-exp">
+        <div class="expand-2" style="margin-top:8px;">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
         </div>
       </div>
     </div>
+
+    <div class="item-row" id="oth-o2">
+      <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o2')"></div><span class="item-name">Возврат</span></div>
+      <div class="item-expand" id="oth-o2-exp">
+        <div class="expand-2" style="margin-top:8px;">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" id="oth-o3">
+      <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o3')"></div><span class="item-name">Проверка / Проработка</span></div>
+      <div class="item-expand" id="oth-o3-exp">
+        <div class="expand-2" style="margin-top:8px;">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" id="oth-o4">
+      <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o4')"></div><span class="item-name">Прочее</span></div>
+      <div class="item-expand" id="oth-o4-exp">
+        <div class="expand-2" style="margin-top:8px;">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Новые добавленные пункты -->
+    <div class="item-row" id="oth-o5">
+      <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o5')"></div><span class="item-name">Налог</span></div>
+      <div class="item-expand" id="oth-o5-exp">
+        <div class="expand-2" style="margin-top:8px;">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" id="oth-o6">
+      <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o6')"></div><span class="item-name">Оплата долга</span></div>
+      <div class="item-expand" id="oth-o6-exp">
+        <div class="expand-2" style="margin-top:8px;">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-row" id="oth-o7">
+      <div class="item-row-head"><div class="item-checkbox" onclick="toggleOth('oth-o7')"></div><span class="item-name">Перемещение денег</span></div>
+      <div class="item-expand" id="oth-o7-exp">
+        <div class="expand-2" style="margin-top:8px;">
+          <div><div class="mini-label">Сумма</div><input class="mini-input" type="number" placeholder="0 ₽" oninput="calcExpenses()"></div>
+          <div><div class="mini-label">Комментарий</div><input class="mini-input" type="text" placeholder="Описание..."></div>
+        </div>
+      </div>
+    </div>
+
   </div>
+</div>
 
   <div id="exp-salary" class="exp-section">
     <div class="sec-label">ДОБАВЬТЕ ВЫПЛАТЫ ПО ПОЗИЦИЯМ</div>
@@ -735,16 +764,17 @@ textarea.field-input { resize: none; line-height: 1.5; }
 
   <div class="sec-label">ОТМЕТЬТЕ ПОСТАВЩИКОВ С ЗАДОЛЖЕННОСТЬЮ</div>
 
-  <div class="sup-row" id="inv-f1"><div class="item-checkbox" onclick="toggleInv('inv-f1')"></div><span class="sup-name">Филе</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
-  <div class="sup-row" id="inv-f2"><div class="item-checkbox" onclick="toggleInv('inv-f2')"></div><span class="sup-name">Фарш</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
-  <div class="sup-row" id="inv-f3"><div class="item-checkbox" onclick="toggleInv('inv-f3')"></div><span class="sup-name">Океан</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
-  <div class="sup-row" id="inv-f4"><div class="item-checkbox" onclick="toggleInv('inv-f4')"></div><span class="sup-name">Аддуми</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
-  <div class="sup-row" id="inv-f5"><div class="item-checkbox" onclick="toggleInv('inv-f5')"></div><span class="sup-name">Шалифуд</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
-  <div class="sup-row" id="inv-f6"><div class="item-checkbox" onclick="toggleInv('inv-f6')"></div><span class="sup-name">Югпродукт</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
-  <div class="sup-row" id="inv-f7"><div class="item-checkbox" onclick="toggleInv('inv-f7')"></div><span class="sup-name">Локали</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f8"><div class="item-checkbox" onclick="toggleInv('inv-f8')"></div><span class="sup-name">Локали</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f7"><div class="item-checkbox" onclick="toggleInv('inv-f7')"></div><span class="sup-name">Югпродукт</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f6"><div class="item-checkbox" onclick="toggleInv('inv-f6')"></div><span class="sup-name">Шалифуд</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f1"><div class="item-checkbox" onclick="toggleInv('inv-f1')"></div><span class="sup-name">Рынок (Беркат)</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f2"><div class="item-checkbox" onclick="toggleInv('inv-f2')"></div><span class="sup-name">Филе</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f3"><div class="item-checkbox" onclick="toggleInv('inv-f3')"></div><span class="sup-name">Фарш</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f4"><div class="item-checkbox" onclick="toggleInv('inv-f4')"></div><span class="sup-name">Океан</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-f5"><div class="item-checkbox" onclick="toggleInv('inv-f5')"></div><span class="sup-name">Аддуми</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
   <div class="sup-row" id="inv-d1"><div class="item-checkbox" onclick="toggleInv('inv-d1')"></div><span class="sup-name">Напитки Арби/Беслан</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
   <div class="sup-row" id="inv-d2"><div class="item-checkbox" onclick="toggleInv('inv-d2')"></div><span class="sup-name">Сиропы</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
-  <div class="sup-row" id="inv-d3"><div class="item-checkbox" onclick="toggleInv('inv-d3')"></div><span class="sup-name">Рынок (Беркат)</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
+  <div class="sup-row" id="inv-d3"><div class="item-checkbox" onclick="toggleInv('inv-d3')"></div><span class="sup-name">Стом</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
   <div class="sup-row" id="inv-d4"><div class="item-checkbox" onclick="toggleInv('inv-d4')"></div><span class="sup-name">Исаев</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
   <div class="sup-row" id="inv-d5"><div class="item-checkbox" onclick="toggleInv('inv-d5')"></div><span class="sup-name">Инзаре</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
   <div class="sup-row" id="inv-p1"><div class="item-checkbox" onclick="toggleInv('inv-p1')"></div><span class="sup-name">Фортайм</span><input class="inline-amount" type="number" placeholder="0 ₽" oninput="calcInv()"></div>
@@ -1083,7 +1113,7 @@ const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
 // ── Apps Script URL ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtRksiM0gp9lOiZC1wdmiRsA0CxdKzqvXJPe7nhjCubWdj1oTs4RBzL14KG-34om8/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybtQSeuaV804vGPJiJIVba34ljyS11t4nU47-kwlMGIkyBjy3_y6EbTYF1vlmU66g/exec';
 
 // ── Today's date ──
 const today = new Date();
@@ -1453,6 +1483,7 @@ async function submitReport() {
   submitBtn.textContent = 'Подготовка данных...';
 
   const dateValue = document.getElementById('s1-date').value;
+  // Всегда приводим к ISO для бэкенда
   let backendDate, displayDate;
   if (dateValue.includes('-')) {
     backendDate = dateValue;
@@ -1484,7 +1515,7 @@ async function submitReport() {
   delete invoices['__total'];
 
   const data = {
-    type:           'shift',
+    type:           'shift',          // ← ВАЖНО: явно указываем тип
     date:           backendDate,
     displayDate:    displayDate,
     name:           document.getElementById('s1-name').value.trim(),
@@ -1510,6 +1541,7 @@ async function submitReport() {
   };
 
   try {
+    // Шаг 1: основные данные
     submitBtn.textContent = 'Отправка отчёта...';
     const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
@@ -1528,6 +1560,7 @@ async function submitReport() {
 
     const reportId = result.reportId || (backendDate + '_' + data.name);
 
+    // Шаг 2: фото по одному
     for (let i = 0; i < photoFiles.length; i++) {
       const file = photoFiles[i];
       if (!file) continue;
@@ -1569,50 +1602,25 @@ async function submitReport() {
 // ═══════════════════════════════ OFF-CASH ═══════════════════════════════
 
 const CATEGORIES = {
-  '1.1 Продукты': [
-    'Рынок (Беркат)','Филе','Фарш','Океан','Аддуми','Шалифуд','Югпродукт','Локали',
-    'Другой поставщик продуктов','Пекарня'
-  ],
-  '1.2 Напитки': [
-    'Напитки Арби/Беслан','Сиропы','Стом','Исаев','Инзаре','Другой поставщик напитков'
-  ],
-  '1.3 Упаковка/Тара': ['Фортайм','Другой поставщик упаковки'],
-  '1.4 Персонал': [
-    'Менеджер','Кассир','Сборка / Раздача','Закупщик','Заготовщик','Повар',
-    'Техперсонал','Курьер','Оператор','Стафф персонала'
-  ],
-  '1.5 Комм. услуги': ['Электричество','Вода','Газ','Комм. услуги'],
-  '2.1 Эксплуатация точки': [
-    'Оборудование','Малая техника и аппараты','Мебель и оснащение','Инструменты и инвентарь',
-    'Ремонт оборудования/техники','Ремонт на точке','Вывоз мусора',
-    'Хозка (Средства для поддержания чистоты и порядка, канцелярия, распечатка)',
-    'Транспортный расход'
-  ],
-  '2.2 Сотрудничество и развитие': [
-    'ЯМ','Сих-Сих','Курьер. услуги','Брендинг / Дизайн','Реклама (услуги)'
-  ],
-  '2.3 Прочее': [
-    'Неоплаченный чек','Возврат','Тайн покупатель/Проработки','Прочее',
-    'Объявления и услуги','Банк. комиссии'
-  ],
-  '3.1 Зарплата админ персонал': [
-    'Управляющий Ахматов','Бухгалтер Альбина','Бухгалтер Седа','Менеджер доставок Адам',
-    'Маркетолог Им-Али','СММ Адам (Грозный)','СММ Амир (Шали)',
-    'Сторисмейкер (Грозный)','Сторисмейкер (Шали)','Инфлюенсер'
-  ],
-  '3.2 Аренда': ['Точка','Цех','Офис'],
+  '1.1 Продукты/Поставщики': ['Беркат','Океан','Филе','Фарш','Аддуми','Локали','Югпродукт','Шалифуд','Пекарня','Магазин','Другой поставщик'],
+  '1.2 Напитки': ['Напитки','Сиропы','Стом','Исаев','Инзаре'],
+  '1.3 Упаковка/Тара': ['Фортайм','Другой'],
+  '1.4 Персонал': ['Менеджер','Кассир','Сборка','Закупщик','Заготовщик','Повар','Техперсонал','Оператор','Курьер'],
+  '1.5 Комм. услуги': ['Электричество','Вода','Газ'],
+  '2.1 Эксплуатация точки': ['Производственное оборудование','Малая техника и аппараты','Мебель и оснащение','Инструменты и инвентарь','Услуги мастеров','Вывоз мусора (масла)','Вывоз масла','Хозка','Транспортный расход'],
+  '2.2 Сотрудничество и развитие': ['Сих-Сих','Ям','Курьер. услуги','Рекламный чек','Комплимент чек','Реклама и СММ (услуги)','Брендинг и дизайн'],
+  '2.3 Прочее': ['Сдача','Возврат','Проверка/проработка','Объявления и услуги','Разовые или непонятные платежи','Банк. комиссии'],
+  '3.1 Зарплата админ персонал': ['Управляющий Ахматов','Бухгалтер Альбина','Бухгалтер Седа','Менеджер доставок Адам','Маркетолог Им-Али','СММ Адам (Грозный)','СММ Амир (Шали)','Сторисмейкер (Грозный)','Сторисмейкер (Шали)','Инфлюенсер'],
+  '3.2 Аренда': ['Точка','Офис','Цех'],
   '3.3 ИТ и связь': ['Айко Сервис','Фудпикас','Вайнах','АТС','Сервер'],
-  '3.4 Премии Бонусы KPI': ['Премии Бонусы KPI'],
-  '3.5 Налог': ['Налог'],
-  '3.6 Админ. разовый расход': ['Админ. разовый расход'],
+  '3.4 Премии Бонусы KPI': [],
+  '3.5 Налог': [],
+  '3.6 Админ. разовый расход': [],
   '4.1 Инкассация и прибыль': ['Буев','Рамзан','Инвестор'],
-  '4.2 Выручка': ['4.2.1 Наличные','4.2.2 Безнал'],
-  '4.3 Движение денег': ['4.3.1 Между счетами','4.3.2 Между точек'],
-  '4.4 Расхождения кассы': ['4.4.1 Недостача','4.4.2 Излишек'],
-  '4.5 Погашение долга': ['Погашение долга','Перемещение денег']
+  '4.2 Другое': [],
+  '4.5 Погашение долга': ['Локали','Югпродукт','Другой']
 };
-const PLUS_SUBCATS = ['ЯМ','4.2.1 Наличные','4.2.2 Безнал','4.4.2 Излишек'];
-const PLUS_SUBCATS = ['ЯМ','Возврат'];
+const PLUS_SUBCATS = ['Вывоз масла','Ям','Сдача','Возврат'];
 
 function initExpenseCategories() {
   const selectors = ['oc-expense-category', 'oc-move-expense-category'];
@@ -1749,6 +1757,7 @@ async function submitOffCash(type) {
   const location = document.getElementById('oc-location').value;
   if (!location) { alert('Выберите точку'); return; }
 
+  // Находим активную кнопку
   const activeSection = document.getElementById(
     type === 'income' ? 'oc-income' :
     type === 'transfer' ? 'oc-transfer' :
@@ -1817,6 +1826,7 @@ async function submitOffCash(type) {
 
     go('screen-off-cash-success');
 
+    // Сброс полей off-cash
     offCashPhotos = [];
     document.getElementById('oc-photo-grid').innerHTML = '';
     document.getElementById('oc-type').selectedIndex = 0;
