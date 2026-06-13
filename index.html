@@ -303,15 +303,14 @@ textarea.field-input { resize: none; line-height: 1.5; }
   </div>
 </div>
   
-<div class="menu-card" onclick="go('screen-management-login')">
+<div class="menu-item" onclick="go('screen-management-login')">
   <div class="menu-icon">📊</div>
-
-  <div class="menu-content">
+  <div class="menu-text">
     <div class="menu-title">Управленческая деятельность</div>
-    <div class="menu-sub">
-      Аналитика и отчёты
-    </div>
+    <div class="menu-desc">Аналитика и отчёты</div>
   </div>
+  <span class="menu-arrow">›</span>
+</div>
 
   <span class="menu-arrow">›</span>
 </div>
@@ -1178,40 +1177,49 @@ textarea.field-input { resize: none; line-height: 1.5; }
   </button>
 
 </div>
-  <div id="screen-management-actions" class="screen">
-
+<div id="screen-management-actions" class="screen">
   <div class="top-bar">
     <div class="back-btn" onclick="go('screen-management-user')">‹</div>
-
     <div>
       <div class="page-title">Выбор действия</div>
     </div>
   </div>
 
-  <div class="menu-card" onclick="go('screen-period-report')">
-    <div class="menu-content">
+  <div class="menu-item" onclick="go('screen-period-report')">
+    <div class="menu-icon">📅</div>
+    <div class="menu-text">
       <div class="menu-title">Посмотреть данные за период</div>
+      <div class="menu-desc">Отчёты по датам и месяцам</div>
     </div>
+    <span class="menu-arrow">›</span>
   </div>
 
-  <div class="menu-card" onclick="go('screen-compare')">
-    <div class="menu-content">
+  <div class="menu-item" onclick="go('screen-compare')">
+    <div class="menu-icon">📊</div>
+    <div class="menu-text">
       <div class="menu-title">Сравнить показатели</div>
+      <div class="menu-desc">Сравнение точек и периодов</div>
     </div>
+    <span class="menu-arrow">›</span>
   </div>
 
-  <div class="menu-card" onclick="go('screen-forecast')">
-    <div class="menu-content">
+  <div class="menu-item" onclick="go('screen-forecast')">
+    <div class="menu-icon">🔮</div>
+    <div class="menu-text">
       <div class="menu-title">Ожидаемые цифры</div>
+      <div class="menu-desc">Прогноз и плановые показатели</div>
     </div>
+    <span class="menu-arrow">›</span>
   </div>
 
-  <div class="menu-card" onclick="go('screen-pl-report')">
-    <div class="menu-content">
+  <div class="menu-item" onclick="go('screen-pl-report')">
+    <div class="menu-icon">💰</div>
+    <div class="menu-text">
       <div class="menu-title">Итог месяца / PL отчёт</div>
+      <div class="menu-desc">Прибыли и убытки за месяц</div>
     </div>
+    <span class="menu-arrow">›</span>
   </div>
-
 </div>
   <div id="screen-period-report" class="screen">
 
