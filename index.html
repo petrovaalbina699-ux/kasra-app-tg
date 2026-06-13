@@ -302,7 +302,19 @@ textarea.field-input { resize: none; line-height: 1.5; }
     <span class="menu-arrow">›</span>
   </div>
 </div>
+  
+<div class="menu-card" onclick="go('screen-management-login')">
+  <div class="menu-icon">📊</div>
 
+  <div class="menu-content">
+    <div class="menu-title">Управленческая деятельность</div>
+    <div class="menu-sub">
+      Аналитика и отчёты
+    </div>
+  </div>
+
+  <span class="menu-arrow">›</span>
+</div>
 <!-- ═══════════════════════════════ STEP 1 ═══════════════════════════════ -->
 <div id="screen-s1" class="screen">
   <div class="top-bar">
@@ -1108,7 +1120,147 @@ textarea.field-input { resize: none; line-height: 1.5; }
     <button class="btn-primary" style="margin-top:32px;" onclick="go('screen-home')">На главную</button>
   </div>
 </div>
+<div id="screen-management-login" class="screen">
 
+  <div class="top-bar">
+    <div class="back-btn" onclick="go('screen-home')">‹</div>
+
+    <div>
+      <div class="page-title">Управленческая деятельность</div>
+      <div class="page-sub">Авторизация</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">Пароль</div>
+
+    <input
+      class="field-input"
+      type="password"
+      id="mg-password"
+      placeholder="Введите пароль">
+  </div>
+
+  <button class="btn-primary" onclick="checkManagementPassword()">
+    Далее →
+  </button>
+
+</div>
+  <div id="screen-management-user" class="screen">
+
+  <div class="top-bar">
+    <div class="back-btn" onclick="go('screen-management-login')">‹</div>
+
+    <div>
+      <div class="page-title">Пользователь</div>
+      <div class="page-sub">Выберите сотрудника</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <select class="field-input" id="mg-user">
+
+      <option value="" selected disabled>
+        Выберите пользователя
+      </option>
+
+      <option>Мохьмад Буев</option>
+      <option>Рамзан Арсалханов</option>
+      <option>Мохьмад Ахматов</option>
+      <option>Альбина</option>
+      <option>Им-Али</option>
+
+    </select>
+  </div>
+
+  <button class="btn-primary" onclick="go('screen-management-actions')">
+    Далее →
+  </button>
+
+</div>
+  <div id="screen-management-actions" class="screen">
+
+  <div class="top-bar">
+    <div class="back-btn" onclick="go('screen-management-user')">‹</div>
+
+    <div>
+      <div class="page-title">Выбор действия</div>
+    </div>
+  </div>
+
+  <div class="menu-card" onclick="go('screen-period-report')">
+    <div class="menu-content">
+      <div class="menu-title">Посмотреть данные за период</div>
+    </div>
+  </div>
+
+  <div class="menu-card" onclick="go('screen-compare')">
+    <div class="menu-content">
+      <div class="menu-title">Сравнить показатели</div>
+    </div>
+  </div>
+
+  <div class="menu-card" onclick="go('screen-forecast')">
+    <div class="menu-content">
+      <div class="menu-title">Ожидаемые цифры</div>
+    </div>
+  </div>
+
+  <div class="menu-card" onclick="go('screen-pl-report')">
+    <div class="menu-content">
+      <div class="menu-title">Итог месяца / PL отчёт</div>
+    </div>
+  </div>
+
+</div>
+  <div id="screen-period-report" class="screen">
+
+  <div class="top-bar">
+    <div class="back-btn" onclick="go('screen-management-actions')">‹</div>
+
+    <div>
+      <div class="page-title">
+        Данные за период
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">Дата от</div>
+    <input class="field-input" type="date">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Дата до</div>
+    <input class="field-input" type="date">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Или месяц</div>
+
+    <select class="field-input">
+      <option>Январь</option>
+      <option>Февраль</option>
+      <option>Март</option>
+      <option>Апрель</option>
+      <option>Май</option>
+      <option>Июнь</option>
+      <option>Июль</option>
+      <option>Август</option>
+      <option>Сентябрь</option>
+      <option>Октябрь</option>
+      <option>Ноябрь</option>
+      <option>Декабрь</option>
+    </select>
+  </div>
+
+  <div class="sec-label">Точки</div>
+
+  <label><input type="checkbox"> Полярников</label><br>
+  <label><input type="checkbox"> Садаева</label><br>
+  <label><input type="checkbox"> Шали</label>
+
+</div>
 <script>
 // ── Telegram Web App init ──
 const tg = window.Telegram?.WebApp;
@@ -1843,6 +1995,21 @@ async function submitOffCash(type) {
     resetBtn();
   }
 }
+ function checkManagementPassword() {
+
+  const pass =
+    document.getElementById('mg-password').value;
+
+  if (pass === '2525') {
+
+    go('screen-management-user');
+
+  } else {
+
+    alert('Неверный пароль');
+
+  }
+} 
 </script>
 </body>
 </html>
